@@ -1,0 +1,8 @@
+/=#
+
+#langdef en-US "English"
+
+#string STR_YUKI_LOADER_HELP_INFORMATION        #language en-US ""
+".TH YukiLoader 0 "Yuki Bootloader"\r\n"
+".SH NAME\r\n"
+"Yuki Bootloader for UEFI.\r\n"

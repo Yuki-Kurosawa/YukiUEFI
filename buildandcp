@@ -1,0 +1,22 @@
+#! /bin/bash
+DEST=/mnt/h/EDKTest/fd
+TARGET=DEBUG
+BOOT=/mnt/i
+BOOTDEV='I:'
+
+sudo mkdir -p $BOOT
+sudo mount -t drvfs $BOOTDEV $BOOT
+
+rm -rvf $BOOT/EFI
+mkdir -p $BOOT/EFI/boot
+
+build -p YukiPkg/YukiUEFI.dsc
+cp Build/YukiPkg/${TARGET}_GCC/X64/*.efi $DEST
+cp Build/YukiPkg/${TARGET}_GCC/X64/*.efi $BOOT
+
+# copy Shell to $BOOT
+cp Build/Shell/DEBUG_GCC/X64/*.efi $BOOT
+cp Build/Shell/DEBUG_GCC/X64/ShellPkg/Application/Shell/Shell/OUTPUT/Shell.efi $BOOT/EFI/boot/bootx64.efi
+
+sudo umount $BOOT
+sudo rm -rvf $BOOT
