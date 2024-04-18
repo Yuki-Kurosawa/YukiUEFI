@@ -2,12 +2,8 @@
   lv_conf.h
 
 # Wrapper header files start #
-  stdc/stdio.h
-  stdc/stdarg.h
-  stdc/stddef.h
-  stdc/stdlib.h
-  stdc/string.h
-  stdc/config.h
+  config.h
+  LvglUefiPort.h
 # Wrapper header files end #
 
 # Upstream Lvgl code
@@ -36,6 +32,7 @@
   lvgl/src/draw/lv_draw_triangle.c
   lvgl/src/draw/lv_draw_vector.c
   lvgl/src/draw/lv_image_decoder.c
+  lvgl/src/draw/lv_image_buf.c
   lvgl/src/draw/nxp/pxp/lv_draw_buf_pxp.c
   lvgl/src/draw/nxp/pxp/lv_draw_pxp.c
   lvgl/src/draw/nxp/pxp/lv_draw_pxp_fill.c
@@ -69,7 +66,6 @@
   lvgl/src/draw/renesas/dave2d/lv_draw_dave2d_triangle.c
   lvgl/src/draw/renesas/dave2d/lv_draw_dave2d_utils.c
   lvgl/src/draw/sdl/lv_draw_sdl.c
-  lvgl/src/draw/sw/blend/helium/lv_blend_helium.S
   lvgl/src/draw/sw/blend/neon/lv_blend_neon.S
   lvgl/src/draw/sw/blend/lv_draw_sw_blend.c
   lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_argb8888.c
@@ -103,10 +99,8 @@
   lvgl/src/draw/vg_lite/lv_draw_vg_lite_triangle.c
   lvgl/src/draw/vg_lite/lv_draw_vg_lite_vector.c
   lvgl/src/draw/vg_lite/lv_vg_lite_decoder.c
-  lvgl/src/draw/vg_lite/lv_vg_lite_grad.c
   lvgl/src/draw/vg_lite/lv_vg_lite_math.c
   lvgl/src/draw/vg_lite/lv_vg_lite_path.c
-  lvgl/src/draw/vg_lite/lv_vg_lite_pending.c
   lvgl/src/draw/vg_lite/lv_vg_lite_utils.c
   lvgl/src/drivers/display/drm/lv_linux_drm.c
   lvgl/src/drivers/display/fb/lv_linux_fbdev.c
@@ -116,12 +110,9 @@
   lvgl/src/drivers/display/st7789/lv_st7789.c
   lvgl/src/drivers/display/st7796/lv_st7796.c
   lvgl/src/drivers/evdev/lv_evdev.c
-  lvgl/src/drivers/libinput/lv_libinput.c
-  lvgl/src/drivers/libinput/lv_xkb.c
   lvgl/src/drivers/nuttx/lv_nuttx_cache.c
   lvgl/src/drivers/nuttx/lv_nuttx_entry.c
   lvgl/src/drivers/nuttx/lv_nuttx_fbdev.c
-  lvgl/src/drivers/nuttx/lv_nuttx_image_cache.c
   lvgl/src/drivers/nuttx/lv_nuttx_lcd.c
   lvgl/src/drivers/nuttx/lv_nuttx_libuv.c
   lvgl/src/drivers/nuttx/lv_nuttx_profiler.c
@@ -181,7 +172,6 @@
   lvgl/src/libs/freetype/lv_ftsystem.c
   lvgl/src/libs/fsdrv/lv_fs_cbfs.c
   lvgl/src/libs/fsdrv/lv_fs_fatfs.c
-  lvgl/src/libs/fsdrv/lv_fs_littlefs.c
   lvgl/src/libs/fsdrv/lv_fs_memfs.c
   lvgl/src/libs/fsdrv/lv_fs_posix.c
   lvgl/src/libs/fsdrv/lv_fs_stdio.c
@@ -321,6 +311,8 @@
   BaseMemoryLib
   DebugLib
   PrintLib
+  ShellCEntryLib
+  LibC
 
 [Guids.common]
 
@@ -328,3 +320,4 @@
   gEfiGraphicsOutputProtocolGuid
   gEfiAbsolutePointerProtocolGuid
   gEfiSimplePointerProtocolGuid
+

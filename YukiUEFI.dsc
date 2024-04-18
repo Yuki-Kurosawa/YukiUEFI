@@ -105,11 +105,60 @@
   MmUnblockMemoryLib|MdePkg/Library/MmUnblockMemoryLib/MmUnblockMemoryLibNull.inf
   VariableFlashInfoLib|MdeModulePkg/Library/BaseVariableFlashInfoLib/BaseVariableFlashInfoLib.inf
 
+  #Std LibC  
+  ShellLib|ShellPkg/Library/UefiShellLib/UefiShellLib.inf
+  FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
+  SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
+  ShellCEntryLib|ShellPkg/Library/UefiShellCEntryLib/UefiShellCEntryLib.inf
+
+  #
+  # C Standard Libraries
+  #
+  LibC|YukiPkg/Libs/libc/StdLib/LibC/LibC.inf
+  LibCType|YukiPkg/Libs/libc/StdLib/LibC/Ctype/Ctype.inf
+  LibLocale|YukiPkg/Libs/libc/StdLib/LibC/Locale/Locale.inf
+  LibMath|YukiPkg/Libs/libc/StdLib/LibC/Math/Math.inf
+  LibSignal|YukiPkg/Libs/libc/StdLib/LibC/Signal/Signal.inf
+  LibStdio|YukiPkg/Libs/libc/StdLib/LibC/Stdio/Stdio.inf
+  LibStdLib|YukiPkg/Libs/libc/StdLib/LibC/StdLib/StdLib.inf
+  LibString|YukiPkg/Libs/libc/StdLib/LibC/String/String.inf
+  LibTime|YukiPkg/Libs/libc/StdLib/LibC/Time/Time.inf
+  LibUefi|YukiPkg/Libs/libc/StdLib/LibC/Uefi/Uefi.inf
+  LibWchar|YukiPkg/Libs/libc/StdLib/LibC/Wchar/Wchar.inf
+
+# Common Utilities for Networking Libraries
+  LibNetUtil|YukiPkg/Libs/libc/StdLib/LibC/NetUtil/NetUtil.inf
+
+# Additional libraries for POSIX functionality.
+  LibPosix|YukiPkg/Libs/libc/StdLib/PosixLib/PosixLib.inf   # Combines LibErr, LibGen, LibGlob, LibStringlist, GetPass into one library
+
+  LibErr|YukiPkg/Libs/libc/StdLib/PosixLib/Err/LibErr.inf
+  LibGen|YukiPkg/Libs/libc/StdLib/PosixLib/Gen/LibGen.inf
+  LibGlob|YukiPkg/Libs/libc/StdLib/PosixLib/Glob/LibGlob.inf
+  LibStringlist|YukiPkg/Libs/libc/StdLib/PosixLib/Stringlist/LibStringlist.inf
+  LibIIO|YukiPkg/Libs/libc/StdLib/LibC/Uefi/InteractiveIO/IIO.inf
+
+# Additional, non-standard, libraries
+  LibContainer|YukiPkg/Libs/libc/StdLib/LibC/Containers/ContainerLib.inf
+
+# Libraries for device abstractions within the Standard C Library
+# Applications should not directly access any functions defined in these libraries.
+  LibGdtoa|YukiPkg/Libs/libc/StdLib/LibC/gdtoa/gdtoa.inf
+  DevConsole|YukiPkg/Libs/libc/StdLib/LibC/Uefi/Devices/daConsole.inf
+  DevShell|YukiPkg/Libs/libc/StdLib/LibC/Uefi/Devices/daShell.inf       # DEPRECATED!  Please use DevMedia for new code.
+  DevMedia|YukiPkg/Libs/libc/StdLib/LibC/Uefi/Devices/daShell.inf
+  DevUtility|YukiPkg/Libs/libc/StdLib/LibC/Uefi/Devices/daUtility.inf
+
+  LuaLib|YukiPkg/Libs/libc/AppPkg/Applications/Lua/LuaLib.inf           # Lua language library
+
 [LibraryClasses.common.UEFI_APPLICATION]
   HobLib|MdePkg/Library/DxeHobLib/DxeHobLib.inf
   MemoryAllocationLib|MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
   DebugLib|MdePkg/Library/UefiDebugLibStdErr/UefiDebugLibStdErr.inf
   FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
+
+[BuildOptions.common]
+  GCC:*_*_*_CC_FLAGS     = -nostdinc -nostdlib -I${HOME}/edk2/YukiPkg/Libs/libc/StdLib/Include -I${HOME}/edk2/YukiPkg/Libs/libc/StdLib/Include/X64
 
 [Components]
   YukiPkg/Application/HelloWorld/HelloWorld.inf

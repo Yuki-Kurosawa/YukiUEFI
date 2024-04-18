@@ -1,3 +1,6 @@
 [submodule "lvgl"]
 	path = Libs/lvgl
 	url = https://github.com/lvgl/lvgl.git
+[submodule "Libs/libc"]
+	path = Libs/libc
+	url = https://github.com/tianocore/edk2-libc.git
