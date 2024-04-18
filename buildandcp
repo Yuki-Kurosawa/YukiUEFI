@@ -4,6 +4,8 @@ TARGET=DEBUG
 BOOT=/mnt/i
 BOOTDEV='I:'
 
+cat YukiPkg/Application/HelloWorld/HelloWorld.inf.inc > YukiPkg/Application/HelloWorld/HelloWorld.inf
+
 sudo mkdir -p $BOOT
 sudo mount -t drvfs $BOOTDEV $BOOT
 
