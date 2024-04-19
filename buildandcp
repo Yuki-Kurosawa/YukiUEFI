@@ -4,9 +4,13 @@ TARGET=DEBUG
 BOOT=/mnt/i
 BOOTDEV='I:'
 
-cat YukiPkg/Application/HelloWorld/HelloWorld.inf.inc > YukiPkg/Application/HelloWorld/HelloWorld.inf
-cat YukiPkg/Include/lvgl.inf.inc >> YukiPkg/Application/HelloWorld/HelloWorld.inf
-cp -Rv YukiPkg/Application/HelloWorld/stdc/*.h YukiPkg/Application/HelloWorld
+#cat YukiPkg/Application/HelloWorld/HelloWorld.inf.inc > YukiPkg/Application/HelloWorld/HelloWorld.inf
+#cat YukiPkg/Include/lvgl.inf.inc >> YukiPkg/Application/HelloWorld/HelloWorld.inf
+#cp -Rv YukiPkg/Application/HelloWorld/stdc/*.h YukiPkg/Application/HelloWorld
+
+
+cat YukiPkg/Application/YukiLoader/YukiLoader.inf.inc > YukiPkg/Application/YukiLoader/YukiLoader.inf
+cat YukiPkg/Include/lvgl.inf.inc >> YukiPkg/Application/YukiLoader/YukiLoader.inf
 
 sudo mkdir -p $BOOT
 sudo mount -t drvfs $BOOTDEV $BOOT

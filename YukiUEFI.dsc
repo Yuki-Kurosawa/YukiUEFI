@@ -161,6 +161,6 @@
   GCC:*_*_*_CC_FLAGS     = -nostdinc -nostdlib -I${HOME}/edk2/YukiPkg/Libs/libc/StdLib/Include -I${HOME}/edk2/YukiPkg/Libs/libc/StdLib/Include/X64
 
 [Components]
-  YukiPkg/Application/HelloWorld/HelloWorld.inf
-#  YukiPkg/Application/YukiLoader/YukiLoader.inf
+#  YukiPkg/Application/HelloWorld/HelloWorld.inf
+  YukiPkg/Application/YukiLoader/YukiLoader.inf
   

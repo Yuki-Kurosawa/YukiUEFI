@@ -37,6 +37,11 @@
   HelloWorld.c
   HelloWorldStr.uni
 
+  # Wrapper header files start #
+  config.h
+  LvglUefiPort.h
+  # Wrapper header files end #
+
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec

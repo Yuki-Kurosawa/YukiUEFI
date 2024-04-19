@@ -1,11 +1,6 @@
 [Sources.common]
   lv_conf.h
-
-# Wrapper header files start #
-  config.h
-  LvglUefiPort.h
-# Wrapper header files end #
-
+  
 # Upstream Lvgl code
   lvgl/src/core/lv_group.c
   lvgl/src/core/lv_obj.c
@@ -298,6 +293,9 @@
 
   # keyboard
   lvgl/demos/keypad_encoder/lv_demo_keypad_encoder.c
+
+  # widgets
+  lvgl/demos/widgets/lv_demo_widgets.c
 
 [Packages.common]
   MdePkg/MdePkg.dec

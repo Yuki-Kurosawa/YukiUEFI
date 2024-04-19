@@ -7,20 +7,24 @@
 
 **/
 
+#ifndef __LVGL_DXE_H__
+#define __LVGL_DXE_H__
+#include "LVGLInit.h"
+#endif
+
 #include <Uefi.h>
-#include <Library/PcdLib.h>
 #include <Library/UefiLib.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/BaseMemoryLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/DebugLib.h>
+#include <Library/BaseLib.h>
 #include <Library/UefiApplicationEntryPoint.h>
 
-//
-// String token ID of help message text.
-// Shell supports to find help message in the resource section of an application image if
-// .MAN file is not found. This global variable is added to make build tool recognizes
-// that the help string is consumed by user and then build tool will add the string into
-// the resource section. Thus the application can use '-?' option to show help message in
-// Shell.
-//
-GLOBAL_REMOVE_IF_UNREFERENCED EFI_STRING_ID  mStringHelpTokenId = STRING_TOKEN (STR_YUKI_LOADER_HELP_INFORMATION);
+#include <Protocol/GraphicsOutput.h>
+#include <Protocol/SimpleTextInEx.h>
+#include <Protocol/SimplePointer.h>
+#include <Protocol/AbsolutePointer.h>
 
 /**
   The user Entry Point for Application. The user code starts with this function
@@ -41,7 +45,7 @@ UefiMain (
   )
 {
 
-  Print ((CHAR16 *)L"Yuki UEFI Bootloader\r\n");
-  Print ((CHAR16 *)L"Test OK\r\n");
+  LVGLInitScreen();
+  Evt_Exit();
   return EFI_SUCCESS;
 }
