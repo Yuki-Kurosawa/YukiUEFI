@@ -46,6 +46,8 @@ UefiMain (
 {
 
   LVGLInitScreen();
+  
   Evt_Exit();
   return EFI_SUCCESS;
 }
+

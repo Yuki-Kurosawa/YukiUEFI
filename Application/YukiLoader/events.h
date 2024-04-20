@@ -17,3 +17,11 @@
 void my_disp_flush(lv_display_t * disp, const lv_area_t * area, lv_color32_t * color32_p);
 void Evt_Exit();
 lv_indev_t * lv_uefi_keyboard_create(void);
+
+EFI_STATUS
+EFIAPI
+EfiMouseInit (
+  VOID
+  );
+
+lv_indev_t * lv_uefi_mouse_create(lv_display_t * disp);

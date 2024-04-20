@@ -1,5 +1,21 @@
 #include "LVGLInit.h"
 
+#include <Uefi.h>
+#include <Library/UefiLib.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/BaseMemoryLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/DebugLib.h>
+#include <Library/BaseLib.h>
+#include <Library/UefiApplicationEntryPoint.h>
+
+#include <Protocol/GraphicsOutput.h>
+#include <Protocol/SimpleTextInEx.h>
+#include <Protocol/SimplePointer.h>
+#include <Protocol/AbsolutePointer.h>
+
+EFI_SIMPLE_POINTER_PROTOCOL    *mSimplePointer1 = NULL;
+
 void LVGLInitScreen()
 {
     lv_init();
@@ -12,4 +28,8 @@ void LVGLInitScreen()
     lv_display_set_flush_cb(display, (lv_display_flush_cb_t)my_disp_flush);
 
     lv_uefi_keyboard_create();
+
+    if (EfiMouseInit () == EFI_SUCCESS) {
+        lv_uefi_mouse_create(display);
+    }
 }
