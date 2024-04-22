@@ -27,7 +27,7 @@
   lvgl/src/draw/lv_draw_triangle.c
   lvgl/src/draw/lv_draw_vector.c
   lvgl/src/draw/lv_image_decoder.c
-  lvgl/src/draw/lv_image_buf.c
+  # lvgl/src/draw/lv_image_buf.c
   lvgl/src/draw/nxp/pxp/lv_draw_buf_pxp.c
   lvgl/src/draw/nxp/pxp/lv_draw_pxp.c
   lvgl/src/draw/nxp/pxp/lv_draw_pxp_fill.c
