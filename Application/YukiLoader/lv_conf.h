@@ -706,10 +706,10 @@
 #endif
 
 /* Built-in TTF decoder */
-#define LV_USE_TINY_TTF 0
+#define LV_USE_TINY_TTF 1
 #if LV_USE_TINY_TTF
     /* Enable loading TTF data from files */
-    #define LV_TINY_TTF_FILE_SUPPORT 0
+    #define LV_TINY_TTF_FILE_SUPPORT 1
 #endif
 
 /*Rlottie library*/
@@ -835,7 +835,7 @@
 #define LV_USE_FILE_EXPLORER                     1
 #if LV_USE_FILE_EXPLORER
     /*Maximum length of path*/
-    #define LV_FILE_EXPLORER_PATH_MAX_LEN        (128)
+    #define LV_FILE_EXPLORER_PATH_MAX_LEN        (256)
     /*Quick access bar, 1:use, 0:not use*/
     /*Requires: lv_list*/
     #define LV_FILE_EXPLORER_QUICK_ACCESS        1

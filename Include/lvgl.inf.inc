@@ -311,6 +311,7 @@
   PrintLib
   ShellCEntryLib
   LibC
+  LibMath
 
 [Guids.common]
 
