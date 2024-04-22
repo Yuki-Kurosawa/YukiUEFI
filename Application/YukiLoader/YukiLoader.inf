@@ -39,6 +39,7 @@
 
   Entry.c
   YukiLoaderStr.uni
+  windows/MsgBox.c
 
   
 

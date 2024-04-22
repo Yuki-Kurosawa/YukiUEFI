@@ -15,6 +15,7 @@
 #include <Protocol/AbsolutePointer.h>
 
 EFI_SIMPLE_POINTER_PROTOCOL    *mSimplePointer1 = NULL;
+lv_group_t * wg;
 
 void LVGLInitScreen()
 {
@@ -32,4 +33,25 @@ void LVGLInitScreen()
     if (EfiMouseInit () == EFI_SUCCESS) {
         lv_uefi_mouse_create(display);
     }
+
+    wg = lv_group_create();
+    lv_group_set_default(wg);
+
+    lv_indev_t * indev = NULL;
+    for(;;) {
+        indev = lv_indev_get_next(indev);
+        if(!indev) {
+            break;
+        }
+
+        lv_indev_type_t indev_type = lv_indev_get_type(indev);
+        if(indev_type == LV_INDEV_TYPE_KEYPAD) {
+            lv_indev_set_group(indev, wg);
+        }
+
+        if(indev_type == LV_INDEV_TYPE_ENCODER) {
+            lv_indev_set_group(indev, wg);
+        }
+    }
+
 }

@@ -46,7 +46,7 @@ UefiMain (
 {
 
   LVGLInitScreen();
-  
+  ShowMsgBox(wg,"Hello World!","Message");
   Evt_Exit();
   return EFI_SUCCESS;
 }
