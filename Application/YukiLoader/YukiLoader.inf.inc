@@ -40,7 +40,7 @@
   Entry.c
   YukiLoaderStr.uni
   windows/MsgBox.c
-
+  windows/FS.c
   
 
 [Packages]
@@ -51,6 +51,13 @@
   UefiApplicationEntryPoint
   UefiLib
   PcdLib
+  DevicePathLib
+  BaseLib
+  MemoryAllocationLib
 
 [UserExtensions.TianoCore."ExtraFiles"]
   YukiLoaderExtra.uni
+
+[Guids]
+  gEfiFileSystemVolumeLabelInfoIdGuid
+  gEfiFileSystemInfoGuid

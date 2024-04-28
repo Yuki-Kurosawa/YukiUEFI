@@ -319,4 +319,5 @@
   gEfiGraphicsOutputProtocolGuid
   gEfiAbsolutePointerProtocolGuid
   gEfiSimplePointerProtocolGuid
+  gEfiSimpleFileSystemProtocolGuid 
 
