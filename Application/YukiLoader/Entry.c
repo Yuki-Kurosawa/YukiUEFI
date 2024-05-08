@@ -26,6 +26,8 @@
 #include <Protocol/SimplePointer.h>
 #include <Protocol/AbsolutePointer.h>
 
+#include "windows/FS.h"
+
 
 extern EFI_BOOT_SERVICES         *gBS;
 extern EFI_SYSTEM_TABLE			 *gST;
@@ -81,7 +83,7 @@ UefiMain (
     Print(L"%d Screen Size : [%d * %d] \n",i+1,info->HorizontalResolution,info->VerticalResolution);
   }
 
-  return EFI_SUCCESS;
+  //return EFI_SUCCESS;
 
   LVGLInitScreen();
   //ShowMsgBox(wg,"Hello World!","Message");

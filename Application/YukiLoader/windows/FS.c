@@ -123,14 +123,20 @@ LibDevicePathToStr (
                   NULL,
                   (VOID **)&DevPathToText
                   );
-  
-  ToText = DevPathToText->ConvertDevicePathToText (
-                            DevPath,
-                            FALSE,
-                            TRUE
-                            );
-  
 
+  if(Status == EFI_SUCCESS)
+  {
+    ToText = DevPathToText->ConvertDevicePathToText (
+                              DevPath,
+                              FALSE,
+                              TRUE
+                              );
+  
+  }
+  else
+  {
+    ToText=L"";
+  }
   return ToText;
 }
 
@@ -242,7 +248,7 @@ LibFindFiles (
         continue;
       }
 
-      if (!(((DirInfo->Attribute & EFI_FILE_DIRECTORY) != 0) || LibIsSupportedFileType (DirInfo->FileName))) {
+      if (!(((DirInfo->Attribute & EFI_FILE_DIRECTORY) != 0) /*|| LibIsSupportedFileType (DirInfo->FileName)*/)) {
         //
         // Slip file unless it is a directory entry or a .EFI file
         //
@@ -298,7 +304,7 @@ LibFindFiles (
 
   //gFileExplorerPrivate.FsOptionMenu->MenuNumber = OptionNumber;
 
-Done:
+//Done:
 
   FreePool (DirInfo);
 
@@ -345,7 +351,7 @@ void LoadFileSystem()
             EFI_FILE_HANDLE FileHandle;
             CHAR16* HelpString;
             CHAR16* FileName;
-            EFI_DEVICE_PATH_PROTOCOL *DevicePath;
+            //EFI_DEVICE_PATH_PROTOCOL *DevicePath;
 
 
             DeviceHandle = SimpleFsHandle[Index];
@@ -356,7 +362,7 @@ void LoadFileSystem()
 
             HelpString   = LibDevicePathToStr (DevicePathFromHandle (DeviceHandle));
             FileName   = LibStrDuplicate (L"\\");
-            DevicePath = FileDevicePath (DeviceHandle, FileName);
+            //DevicePath = FileDevicePath (DeviceHandle, FileName);
 
             
 
