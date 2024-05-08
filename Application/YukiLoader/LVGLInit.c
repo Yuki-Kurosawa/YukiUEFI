@@ -14,6 +14,7 @@
 #include <Protocol/SimplePointer.h>
 #include <Protocol/AbsolutePointer.h>
 
+
 EFI_SIMPLE_POINTER_PROTOCOL    *mSimplePointer1 = NULL;
 lv_group_t * wg;
 
@@ -54,4 +55,5 @@ void LVGLInitScreen()
         }
     }
 
+    
 }

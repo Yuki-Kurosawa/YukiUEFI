@@ -12,47 +12,14 @@
 
 lv_obj_t * label1;
 void LoadFileSystem();
-void LabelAppendText(lv_obj_t *lbl,char* split,char* text);
 
-void wtom(CHAR16 *w,CHAR8 * buffer)
+void wtom(CHAR16 *w,CHAR8 *buffer)
 {
 	//wcstombs(buffer,w,1024);
   UnicodeStrToAsciiStrS(w,buffer,1024);
   Print(L"%a\n",buffer);
-  return buffer;
 }
 
-void LabelAppendText(lv_obj_t *lbl,char* split,char* text)
-{
-    char before[102400];
-    memset(before,0,sizeof(before));
-    lv_strcpy(before,lv_label_get_text(label1));
-    lv_label_set_text_fmt(lbl,"%s%s%s",before,split,text);
-}
-
-void LabelAppendUINT16(lv_obj_t *lbl,char* split,UINT16 num)
-{
-    char before[102400];
-    memset(before,0,sizeof(before));
-    lv_strcpy(before,lv_label_get_text(label1));
-    lv_label_set_text_fmt(lbl,"%s%s%ld",before,split,num);
-}
-
-void LabelAppendUINT32(lv_obj_t *lbl,char* split,UINT32 num)
-{
-    char before[102400];
-    memset(before,0,sizeof(before));
-    lv_strcpy(before,lv_label_get_text(label1));
-    lv_label_set_text_fmt(lbl,"%s%s%ld",before,split,num);
-}
-
-void LabelAppendUINT64(lv_obj_t *lbl,char* split,UINT64 num)
-{
-    char before[102400];
-    memset(before,0,sizeof(before));
-    lv_strcpy(before,lv_label_get_text(label1));
-    lv_label_set_text_fmt(lbl,"%s%s%ld",before,split,num);
-}
 
 void ShowFS(lv_group_t * g)
 {
@@ -212,6 +179,132 @@ LibFileInfo (
   return Buffer;
 }
 
+/**
+  Find files under current directory.
+
+  All files and sub-directories in current directory
+  will be stored in DirectoryMenu for future use.
+
+  @param FileHandle    Parent file handle.
+  @param FileName      Parent file name.
+  @param DeviceHandle  Driver handle for this partition.
+
+  @retval EFI_SUCCESS         Get files from current dir successfully.
+  @return Other value if can't get files from current dir.
+
+**/
+EFI_STATUS
+LibFindFiles (
+  IN EFI_FILE_HANDLE  FileHandle,
+  IN UINT16           *FileName,
+  IN EFI_HANDLE       DeviceHandle
+  )
+{
+  EFI_FILE_INFO  *DirInfo;
+  UINTN          BufferSize;
+  UINTN          DirBufferSize;
+  UINTN          Pass;
+  EFI_STATUS     Status;
+  UINTN          OptionNumber;
+
+  OptionNumber = 0;
+
+  DirBufferSize = sizeof (EFI_FILE_INFO) + 1024;
+  DirInfo       = AllocateZeroPool (DirBufferSize);
+  if (DirInfo == NULL) {
+    return EFI_OUT_OF_RESOURCES;
+  }
+
+  //
+  // Get all files in current directory
+  // Pass 1 to get Directories
+  // Pass 2 to get files that are EFI images
+  //
+  Status = EFI_SUCCESS;
+  for (Pass = 1; Pass <= 2; Pass++) {
+    FileHandle->SetPosition (FileHandle, 0);
+    for ( ; ;) {
+      BufferSize = DirBufferSize;
+      Status     = FileHandle->Read (FileHandle, &BufferSize, DirInfo);
+      if (EFI_ERROR (Status) || (BufferSize == 0)) {
+        Status = EFI_SUCCESS;
+        break;
+      }
+
+      if ((((DirInfo->Attribute & EFI_FILE_DIRECTORY) != 0) && (Pass == 2)) ||
+          (((DirInfo->Attribute & EFI_FILE_DIRECTORY) == 0) && (Pass == 1))
+          )
+      {
+        //
+        // Pass 1 is for Directories
+        // Pass 2 is for file names
+        //
+        continue;
+      }
+
+      if (!(((DirInfo->Attribute & EFI_FILE_DIRECTORY) != 0) || LibIsSupportedFileType (DirInfo->FileName))) {
+        //
+        // Slip file unless it is a directory entry or a .EFI file
+        //
+        continue;
+      }
+
+      //NewMenuEntry = LibCreateMenuEntry ();
+      //if (NULL == NewMenuEntry) {
+      //  Status = EFI_OUT_OF_RESOURCES;
+      //  goto Done;
+      //}
+
+      //NewFileContext               = (FILE_CONTEXT *)NewMenuEntry->VariableContext;
+      //NewFileContext->DeviceHandle = DeviceHandle;
+      //NewFileContext->FileName     = LibAppendFileName (FileName, DirInfo->FileName);
+      //if (NewFileContext->FileName == NULL) {
+      //  LibDestroyMenuEntry (NewMenuEntry);
+      //  Status = EFI_OUT_OF_RESOURCES;
+      //  goto Done;
+      //}
+
+      //NewFileContext->FileHandle = FileHandle;
+      //NewFileContext->DevicePath = FileDevicePath (NewFileContext->DeviceHandle, NewFileContext->FileName);
+      //NewMenuEntry->HelpString   = NULL;
+      //NewFileContext->IsDir      = (BOOLEAN)((DirInfo->Attribute & EFI_FILE_DIRECTORY) == EFI_FILE_DIRECTORY);
+
+      // if (NewFileContext->IsDir) {
+      //   BufferSize                  = StrLen (DirInfo->FileName) * 2 + 6;
+      //   NewMenuEntry->DisplayString = AllocateZeroPool (BufferSize);
+      //   UnicodeSPrint (
+      //     NewMenuEntry->DisplayString,
+      //     BufferSize,
+      //     L"<%s>",
+      //     DirInfo->FileName
+      //     );
+      // } else {
+      //   NewMenuEntry->DisplayString = LibStrDuplicate (DirInfo->FileName);
+      // }
+
+      // NewMenuEntry->DisplayStringToken = HiiSetString (
+      //                                      gFileExplorerPrivate.FeHiiHandle,
+      //                                      0,
+      //                                      NewMenuEntry->DisplayString,
+      //                                      NULL
+      //                                      );
+
+      // NewFileContext->IsRoot = FALSE;
+
+      OptionNumber++;
+      //InsertTailList (&gFileExplorerPrivate.FsOptionMenu->Head, &NewMenuEntry->Link);
+    }
+  }
+
+  //gFileExplorerPrivate.FsOptionMenu->MenuNumber = OptionNumber;
+
+Done:
+
+  FreePool (DirInfo);
+
+  return Status;
+}
+
 
 void LoadFileSystem()
 {
@@ -236,6 +329,7 @@ void LoadFileSystem()
         &SimpleFsHandle
         );
 
+    
     LabelAppendText(label1,"",Status == EFI_SUCCESS ? "SUCCESS": "FAILED");
     LabelAppendText(label1,"","\n");
 
@@ -278,7 +372,7 @@ void LoadFileSystem()
                 VolumeLabel = L"<NONAME>";
             }
 
-            char* buf[1024]={0},buf2[1024]={0},buf3[1024]={0};
+            char buf[1024]={0},buf2[1024]={0},buf3[1024]={0};
             wtom(HelpString,buf);
             wtom(FileName,buf2);
             wtom(VolumeLabel,buf3);

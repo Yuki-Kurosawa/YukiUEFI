@@ -37,9 +37,12 @@
   LVGLInit.c
   events.c
 
+  control/labelExtend.c
+    
+  windows/MsgBox.c
+
   Entry.c
   YukiLoaderStr.uni
-  windows/MsgBox.c
   windows/FS.c
   
 
