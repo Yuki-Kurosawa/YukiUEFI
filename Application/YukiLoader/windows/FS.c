@@ -13,14 +13,6 @@
 lv_obj_t * label1;
 void LoadFileSystem();
 
-void wtom(CHAR16 *w,CHAR8 *buffer)
-{
-	//wcstombs(buffer,w,1024);
-  UnicodeStrToAsciiStrS(w,buffer,1024);
-  Print(L"%a\n",buffer);
-}
-
-
 void ShowFS(lv_group_t * g)
 {
     label1 = lv_label_create(lv_screen_active());
@@ -31,6 +23,11 @@ void ShowFS(lv_group_t * g)
     lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 0, 0);
 
     LoadFileSystem();
+
+    Print(L"UEFI v%d.%02d (%s, 0x%08x)\n",(gST->Hdr.Revision&0xffff0000)>>16,
+        (gST->Hdr.Revision&0x0000ffff),
+        gST->FirmwareVendor,
+        gST->FirmwareRevision);
 
 }
 
@@ -248,12 +245,27 @@ LibFindFiles (
         continue;
       }
 
-      if (!(((DirInfo->Attribute & EFI_FILE_DIRECTORY) != 0) /*|| LibIsSupportedFileType (DirInfo->FileName)*/)) {
-        //
-        // Slip file unless it is a directory entry or a .EFI file
-        //
-        continue;
+      // if (!(((DirInfo->Attribute & EFI_FILE_DIRECTORY) != 0) /*|| LibIsSupportedFileType (DirInfo->FileName)*/)) {
+      //   //
+      //   // Slip file unless it is a directory entry or a .EFI file
+      //   //
+      //   continue;
+      // }
+
+      char fn[1024]={0};
+      WideStrToAsciiStr(DirInfo->FileName,fn);
+      LabelAppendText(label1,"",fn);
+      
+      if((DirInfo->Attribute & EFI_FILE_DIRECTORY) == EFI_FILE_DIRECTORY)
+      {
+        LabelAppendText(label1," ","<DIR>");
       }
+      else{
+        LabelAppendUINT64(label1," ",DirInfo->FileSize);
+        LabelAppendText(label1," ","Bytes");
+      }
+      
+      LabelAppendText(label1,"","\n");
 
       //NewMenuEntry = LibCreateMenuEntry ();
       //if (NULL == NewMenuEntry) {
@@ -379,9 +391,9 @@ void LoadFileSystem()
             }
 
             char buf[1024]={0},buf2[1024]={0},buf3[1024]={0};
-            wtom(HelpString,buf);
-            wtom(FileName,buf2);
-            wtom(VolumeLabel,buf3);
+            WideStrToAsciiStr(HelpString,buf);
+            WideStrToAsciiStr(FileName,buf2);
+            WideStrToAsciiStr(VolumeLabel,buf3);
 
             LabelAppendText(label1,"","FOUND:");
             LabelAppendText(label1," ",buf);
@@ -428,6 +440,10 @@ void LoadFileSystem()
             if (Info != NULL) {
                 FreePool (Info);
             }
+
+            LibFindFiles(EfiFpHandle,NULL,DeviceHandle);
+
+            LabelAppendText(label1,"","----------------------\n");
 
         }
 

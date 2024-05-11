@@ -38,6 +38,8 @@
   events.c
 
   control/labelExtend.c
+
+  libfunc/func.c
     
   windows/MsgBox.c
 
