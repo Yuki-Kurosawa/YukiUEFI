@@ -1,4 +1,5 @@
-#include "FS.h"
+#include "EFIFS.h"
+
 #include <Uefi.h>
 #include <Library/UefiLib.h>
 #include <Library/UefiBootServicesTableLib.h>
@@ -10,40 +11,7 @@
 #include <Guid/FileInfo.h>
 #include <Guid/FileSystemInfo.h>
 
-lv_obj_t * label1;
-void LoadFileSystem();
-
-void ShowFS(lv_group_t * g)
-{
-    label1 = lv_label_create(lv_screen_active());
-    lv_label_set_long_mode(label1, LV_LABEL_LONG_WRAP);     /*Break the long lines*/
-    lv_label_set_text(label1, "");
-    lv_obj_set_width(label1, 1080);  /*Set smaller width to make the lines wrap*/
-    lv_obj_set_style_text_align(label1, LV_TEXT_ALIGN_LEFT, 0);
-    lv_obj_align(label1, LV_ALIGN_TOP_LEFT, 0, 0);
-
-    LoadFileSystem();
-
-    Print(L"UEFI v%d.%02d (%s, 0x%08x)\n",(gST->Hdr.Revision&0xffff0000)>>16,
-        (gST->Hdr.Revision&0x0000ffff),
-        gST->FirmwareVendor,
-        gST->FirmwareRevision);
-
-}
-
-/**
-  Duplicate a string.
-
-  @param Src             The source.
-
-  @return A new string which is duplicated copy of the source.
-  @retval NULL If there is not enough memory.
-
-**/
-CHAR16 *
-LibStrDuplicate (
-  IN CHAR16  *Src
-  )
+CHAR16 *LibStrDuplicate(IN CHAR16 *Src)
 {
   CHAR16  *Dest;
   UINTN   Size;
@@ -58,10 +26,8 @@ LibStrDuplicate (
   return Dest;
 }
 
-EFI_FILE_HANDLE
-LibOpenRoot (
-  IN EFI_HANDLE  DeviceHandle
-  )
+
+EFI_FILE_HANDLE LibOpenRoot(IN EFI_HANDLE DeviceHandle)
 {
   EFI_STATUS                       Status;
   EFI_SIMPLE_FILE_SYSTEM_PROTOCOL  *Volume;
@@ -94,18 +60,8 @@ LibOpenRoot (
   return EFI_ERROR (Status) ? NULL : File;
 }
 
-/**
-  This function converts an input device structure to a Unicode string.
 
-  @param DevPath                  A pointer to the device path structure.
-
-  @return A new allocated Unicode string that represents the device path.
-
-**/
-CHAR16 *
-LibDevicePathToStr (
-  IN EFI_DEVICE_PATH_PROTOCOL  *DevPath
-  )
+CHAR16 *LibDevicePathToStr(IN EFI_DEVICE_PATH_PROTOCOL *DevPath)
 {
   EFI_STATUS                        Status;
   CHAR16                            *ToText;
@@ -137,22 +93,8 @@ LibDevicePathToStr (
   return ToText;
 }
 
-/**
 
-  Function gets the file information from an open file descriptor, and stores it
-  in a buffer allocated from pool.
-
-  @param FHand           File Handle.
-  @param InfoType        Info type need to get.
-
-  @retval                A pointer to a buffer with file information or NULL is returned
-
-**/
-VOID *
-LibFileInfo (
-  IN EFI_FILE_HANDLE  FHand,
-  IN EFI_GUID         *InfoType
-  )
+VOID *LibFileInfo(IN EFI_FILE_HANDLE FHand, IN EFI_GUID *InfoType)
 {
   EFI_STATUS     Status;
   EFI_FILE_INFO  *Buffer;
@@ -182,26 +124,8 @@ LibFileInfo (
   return Buffer;
 }
 
-/**
-  Find files under current directory.
 
-  All files and sub-directories in current directory
-  will be stored in DirectoryMenu for future use.
-
-  @param FileHandle    Parent file handle.
-  @param FileName      Parent file name.
-  @param DeviceHandle  Driver handle for this partition.
-
-  @retval EFI_SUCCESS         Get files from current dir successfully.
-  @return Other value if can't get files from current dir.
-
-**/
-EFI_STATUS
-LibFindFiles (
-  IN EFI_FILE_HANDLE  FileHandle,
-  IN UINT16           *FileName,
-  IN EFI_HANDLE       DeviceHandle
-  )
+EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN EFI_HANDLE DeviceHandle)
 {
   EFI_FILE_INFO  *DirInfo;
   UINTN          BufferSize;
@@ -254,18 +178,18 @@ LibFindFiles (
 
       char fn[1024]={0};
       WideStrToAsciiStr(DirInfo->FileName,fn);
-      LabelAppendText(label1,"",fn);
+      //LabelAppendText(label1,"",fn);
       
       if((DirInfo->Attribute & EFI_FILE_DIRECTORY) == EFI_FILE_DIRECTORY)
       {
-        LabelAppendText(label1," ","<DIR>");
+        //LabelAppendText(label1," ","<DIR>");
       }
       else{
-        LabelAppendUINT64(label1," ",DirInfo->FileSize);
-        LabelAppendText(label1," ","Bytes");
+        //LabelAppendUINT64(label1," ",DirInfo->FileSize);
+        //LabelAppendText(label1," ","Bytes");
       }
       
-      LabelAppendText(label1,"","\n");
+      //LabelAppendText(label1,"","\n");
 
       //NewMenuEntry = LibCreateMenuEntry ();
       //if (NULL == NewMenuEntry) {
@@ -337,7 +261,7 @@ void LoadFileSystem()
     UINTN                 SysInfoSize;
     EFI_FILE_PROTOCOL     *EfiFpHandle;
     
-    LabelAppendText(label1,"","Loading File System ... ");
+    //LabelAppendText(label1,"","Loading File System ... ");
 
     Status = gBS->LocateHandleBuffer (
         ByProtocol,
@@ -348,8 +272,8 @@ void LoadFileSystem()
         );
 
     
-    LabelAppendText(label1,"",Status == EFI_SUCCESS ? "SUCCESS": "FAILED");
-    LabelAppendText(label1,"","\n");
+    //LabelAppendText(label1,"",Status == EFI_SUCCESS ? "SUCCESS": "FAILED");
+    //LabelAppendText(label1,"","\n");
 
     if (!EFI_ERROR (Status)) {
         //
@@ -395,11 +319,11 @@ void LoadFileSystem()
             WideStrToAsciiStr(FileName,buf2);
             WideStrToAsciiStr(VolumeLabel,buf3);
 
-            LabelAppendText(label1,"","FOUND:");
-            LabelAppendText(label1," ",buf);
-            LabelAppendText(label1,",",buf2);
-            LabelAppendText(label1,",",buf3);
-            LabelAppendText(label1,"","\n");
+            //LabelAppendText(label1,"","FOUND:");
+            //LabelAppendText(label1," ",buf);
+            //LabelAppendText(label1,",",buf2);
+            //LabelAppendText(label1,",",buf3);
+            //LabelAppendText(label1,"","\n");
 
             SysInfo     = NULL;
             SysInfoSize = 0;
@@ -426,14 +350,14 @@ void LoadFileSystem()
 
             if(Status == EFI_SUCCESS)
             {
-              LabelAppendUINT64(label1,"",SysInfo->VolumeSize);
-              LabelAppendText(label1,",", "TOTAL\n");
-              LabelAppendUINT64(label1,"",SysInfo->FreeSpace);
-              LabelAppendText(label1,",", "FREE\n");
-              LabelAppendUINT64(label1,"",SysInfo->Size);
-              LabelAppendText(label1,",", "SIZE\n");
-              LabelAppendUINT64(label1,"",SysInfo->BlockSize);
-              LabelAppendText(label1,",", "BLOCK\n");
+              //LabelAppendUINT64(label1,"",SysInfo->VolumeSize);
+              //LabelAppendText(label1,",", "TOTAL\n");
+              //LabelAppendUINT64(label1,"",SysInfo->FreeSpace);
+              //LabelAppendText(label1,",", "FREE\n");
+              //LabelAppendUINT64(label1,"",SysInfo->Size);
+              //LabelAppendText(label1,",", "SIZE\n");
+              //LabelAppendUINT64(label1,"",SysInfo->BlockSize);
+              //LabelAppendText(label1,",", "BLOCK\n");
             }
 
             
@@ -443,7 +367,7 @@ void LoadFileSystem()
 
             LibFindFiles(EfiFpHandle,NULL,DeviceHandle);
 
-            LabelAppendText(label1,"","----------------------\n");
+            //LabelAppendText(label1,"","----------------------\n");
 
         }
 
@@ -457,6 +381,6 @@ void LoadFileSystem()
         FreePool (SimpleFsHandle);
     }
 
-    LabelAppendText(label1,"\n","BOOT DONE");
+    //LabelAppendText(label1,"\n","BOOT DONE");
 
 }

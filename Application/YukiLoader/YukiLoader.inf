@@ -40,12 +40,13 @@
   control/labelExtend.c
 
   libfunc/func.c
+  libefifs/EFIFS.c
     
   windows/MsgBox.c
 
   Entry.c
   YukiLoaderStr.uni
-  windows/FS.c
+  #windows/FS.c
   
 
 [Packages]

@@ -223,7 +223,7 @@ static void mouse_read(lv_indev_t * indev_drv, lv_indev_data_t * data)
 {
   EFI_STATUS                  Status = EFI_UNSUPPORTED;
   EFI_SIMPLE_POINTER_STATE    SimpleState;
-  EFI_ABSOLUTE_POINTER_STATE  AbsState;
+  //EFI_ABSOLUTE_POINTER_STATE  AbsState;
 
   lv_display_t *disp = lv_indev_get_driver_data(indev_drv);
 
