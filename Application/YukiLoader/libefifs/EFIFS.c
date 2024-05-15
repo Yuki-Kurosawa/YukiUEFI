@@ -11,6 +11,9 @@
 #include <Guid/FileInfo.h>
 #include <Guid/FileSystemInfo.h>
 
+EFI_HANDLE DiskDrives[26]={0};
+UINTN DiskCount=0;
+
 CHAR16 *LibStrDuplicate(IN CHAR16 *Src)
 {
   CHAR16  *Dest;
@@ -251,7 +254,6 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
 void LoadFileSystem()
 {
     EFI_STATUS Status;
-    UINTN NoSimpleFsHandles;
     EFI_HANDLE *SimpleFsHandle;
     UINT16                        *VolumeLabel;
     UINTN                         Index;
@@ -267,7 +269,7 @@ void LoadFileSystem()
         ByProtocol,
         &gEfiSimpleFileSystemProtocolGuid,
         NULL,
-        &NoSimpleFsHandles,
+        &DiskCount,
         &SimpleFsHandle
         );
 
@@ -279,28 +281,25 @@ void LoadFileSystem()
         //
         // Find all the instances of the File System prototocol
         //
-        for (Index = 0; Index < NoSimpleFsHandles; Index++) {
+        for (Index = 0; Index < DiskCount || Index==26; Index++) {
             //
             // Allocate pool for this load option
             //
-            EFI_HANDLE *DeviceHandle;
             EFI_FILE_HANDLE FileHandle;
             CHAR16* HelpString;
             CHAR16* FileName;
             //EFI_DEVICE_PATH_PROTOCOL *DevicePath;
 
 
-            DeviceHandle = SimpleFsHandle[Index];
-            FileHandle   = LibOpenRoot (DeviceHandle);
+            DiskDrives[Index] = SimpleFsHandle[Index];
+            FileHandle   = LibOpenRoot (DiskDrives[Index]);
             if (FileHandle == NULL) {                
                 continue;
             }
 
-            HelpString   = LibDevicePathToStr (DevicePathFromHandle (DeviceHandle));
+            HelpString   = LibDevicePathToStr (DevicePathFromHandle (DiskDrives[Index]));
             FileName   = LibStrDuplicate (L"\\");
-            //DevicePath = FileDevicePath (DeviceHandle, FileName);
-
-            
+            //DevicePath = FileDevicePath (DiskDrives[Index], FileName);            
 
             //
             // Get current file system's Volume Label
@@ -365,19 +364,17 @@ void LoadFileSystem()
                 FreePool (Info);
             }
 
-            LibFindFiles(EfiFpHandle,NULL,DeviceHandle);
+            LibFindFiles(EfiFpHandle,NULL,DiskDrives[Index]);
 
             //LabelAppendText(label1,"","----------------------\n");
 
+            }
+
+          OptionNumber++;
         }
-
-
-        OptionNumber++;
-
     }
-  }
 
-    if (NoSimpleFsHandles != 0) {
+    if (DiskCount != 0) {
         FreePool (SimpleFsHandle);
     }
 
