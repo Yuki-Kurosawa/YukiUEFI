@@ -94,9 +94,9 @@ UefiMain (
   LVGLInitScreen();
   //ShowMsgBox(wg,"Hello World!","Message");
   //ShowFS(wg);
-  LoadFileSystem();
+  InitEfiFs();
   //RegisterFS();
-  //lv_example_file_explorer_1();
+  lv_example_file_explorer_1();
   Evt_Exit();
   return EFI_SUCCESS;
 }
@@ -177,7 +177,7 @@ void lv_example_file_explorer_1(void)
     // strcat(document_dir, "/Documents");
     // lv_file_explorer_set_quick_access_path(file_explorer, LV_EXPLORER_DOCS_DIR, document_dir);
 
-    //lv_file_explorer_set_quick_access_path(file_explorer, LV_EXPLORER_FS_DIR, "A:/");
+    lv_file_explorer_set_quick_access_path(file_explorer, LV_EXPLORER_FS_DIR, "A:/");
 #endif
 
     lv_obj_add_event_cb(file_explorer, file_explorer_event_handler, LV_EVENT_ALL, NULL);

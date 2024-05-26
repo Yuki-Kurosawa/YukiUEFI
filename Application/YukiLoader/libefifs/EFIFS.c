@@ -13,6 +13,12 @@
 
 EFI_HANDLE DiskDrives[26]={0};
 UINTN DiskCount=0;
+EFI_FILE_HANDLE DiskRoot[26]={0};
+void* OpenedDir=0;
+int DirIndex=0;
+char* DirFiles[1024]={0};
+int FileMaxCount=0;
+
 
 CHAR16 *LibStrDuplicate(IN CHAR16 *Src)
 {
@@ -28,7 +34,6 @@ CHAR16 *LibStrDuplicate(IN CHAR16 *Src)
 
   return Dest;
 }
-
 
 EFI_FILE_HANDLE LibOpenRoot(IN EFI_HANDLE DeviceHandle)
 {
@@ -63,7 +68,6 @@ EFI_FILE_HANDLE LibOpenRoot(IN EFI_HANDLE DeviceHandle)
   return EFI_ERROR (Status) ? NULL : File;
 }
 
-
 CHAR16 *LibDevicePathToStr(IN EFI_DEVICE_PATH_PROTOCOL *DevPath)
 {
   EFI_STATUS                        Status;
@@ -96,7 +100,6 @@ CHAR16 *LibDevicePathToStr(IN EFI_DEVICE_PATH_PROTOCOL *DevPath)
   return ToText;
 }
 
-
 VOID *LibFileInfo(IN EFI_FILE_HANDLE FHand, IN EFI_GUID *InfoType)
 {
   EFI_STATUS     Status;
@@ -127,7 +130,6 @@ VOID *LibFileInfo(IN EFI_FILE_HANDLE FHand, IN EFI_GUID *InfoType)
   return Buffer;
 }
 
-
 EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN EFI_HANDLE DeviceHandle)
 {
   EFI_FILE_INFO  *DirInfo;
@@ -151,6 +153,7 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
   // Pass 2 to get files that are EFI images
   //
   Status = EFI_SUCCESS;
+  int k=0;
   for (Pass = 1; Pass <= 2; Pass++) {
     FileHandle->SetPosition (FileHandle, 0);
     for ( ; ;) {
@@ -172,70 +175,12 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
         continue;
       }
 
-      // if (!(((DirInfo->Attribute & EFI_FILE_DIRECTORY) != 0) /*|| LibIsSupportedFileType (DirInfo->FileName)*/)) {
-      //   //
-      //   // Slip file unless it is a directory entry or a .EFI file
-      //   //
-      //   continue;
-      // }
-
       char fn[1024]={0};
       WideStrToAsciiStr(DirInfo->FileName,fn);
-      //LabelAppendText(label1,"",fn);
-      
-      if((DirInfo->Attribute & EFI_FILE_DIRECTORY) == EFI_FILE_DIRECTORY)
-      {
-        //LabelAppendText(label1," ","<DIR>");
-      }
-      else{
-        //LabelAppendUINT64(label1," ",DirInfo->FileSize);
-        //LabelAppendText(label1," ","Bytes");
-      }
-      
-      //LabelAppendText(label1,"","\n");
 
-      //NewMenuEntry = LibCreateMenuEntry ();
-      //if (NULL == NewMenuEntry) {
-      //  Status = EFI_OUT_OF_RESOURCES;
-      //  goto Done;
-      //}
-
-      //NewFileContext               = (FILE_CONTEXT *)NewMenuEntry->VariableContext;
-      //NewFileContext->DeviceHandle = DeviceHandle;
-      //NewFileContext->FileName     = LibAppendFileName (FileName, DirInfo->FileName);
-      //if (NewFileContext->FileName == NULL) {
-      //  LibDestroyMenuEntry (NewMenuEntry);
-      //  Status = EFI_OUT_OF_RESOURCES;
-      //  goto Done;
-      //}
-
-      //NewFileContext->FileHandle = FileHandle;
-      //NewFileContext->DevicePath = FileDevicePath (NewFileContext->DeviceHandle, NewFileContext->FileName);
-      //NewMenuEntry->HelpString   = NULL;
-      //NewFileContext->IsDir      = (BOOLEAN)((DirInfo->Attribute & EFI_FILE_DIRECTORY) == EFI_FILE_DIRECTORY);
-
-      // if (NewFileContext->IsDir) {
-      //   BufferSize                  = StrLen (DirInfo->FileName) * 2 + 6;
-      //   NewMenuEntry->DisplayString = AllocateZeroPool (BufferSize);
-      //   UnicodeSPrint (
-      //     NewMenuEntry->DisplayString,
-      //     BufferSize,
-      //     L"<%s>",
-      //     DirInfo->FileName
-      //     );
-      // } else {
-      //   NewMenuEntry->DisplayString = LibStrDuplicate (DirInfo->FileName);
-      // }
-
-      // NewMenuEntry->DisplayStringToken = HiiSetString (
-      //                                      gFileExplorerPrivate.FeHiiHandle,
-      //                                      0,
-      //                                      NewMenuEntry->DisplayString,
-      //                                      NULL
-      //                                      );
-
-      // NewFileContext->IsRoot = FALSE;
-
+      DirFiles[k]=fn;
+      Print(L"%x %a %s\n",k,DirFiles[k],DirInfo->FileName);
+      k++;
       OptionNumber++;
       //InsertTailList (&gFileExplorerPrivate.FsOptionMenu->Head, &NewMenuEntry->Link);
     }
@@ -244,12 +189,11 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
   //gFileExplorerPrivate.FsOptionMenu->MenuNumber = OptionNumber;
 
 //Done:
-
+  FileMaxCount=OptionNumber;
   FreePool (DirInfo);
 
   return Status;
 }
-
 
 void LoadFileSystem()
 {
@@ -357,6 +301,26 @@ void LoadFileSystem()
               //LabelAppendText(label1,",", "SIZE\n");
               //LabelAppendUINT64(label1,"",SysInfo->BlockSize);
               //LabelAppendText(label1,",", "BLOCK\n");
+
+              CHAR16* FP=L"\\test\\test16le.txt";
+              CHAR16 *TFP=FP;
+              EFI_FILE_PROTOCOL *FILE;
+              Status=EfiFpHandle->Open(FileHandle,&FILE,TFP,EFI_FILE_MODE_READ,0);
+              if(Status==EFI_SUCCESS)
+              {
+                Print(L"FILE OPEN SUCCESS\n");
+                CHAR16 BUF[1000]={0};
+                UINTN size=1000ull;
+                UINT64 POS=0;
+                FILE->Read(FILE,&size, BUF);
+                FILE->GetPosition(FILE,&POS);
+                Print(L"%s\n%d\t%d\n",BUF,POS,size);
+                FILE->Close(FILE);
+              }
+              else
+              {
+                Print(L"FILE OPEN FAILED\n");
+              }
             }
 
             
@@ -380,4 +344,132 @@ void LoadFileSystem()
 
     //LabelAppendText(label1,"\n","BOOT DONE");
 
+}
+
+#if USE_LVGL
+
+static lv_fs_drv_t fs[26]={0};
+
+static void * fs_dir_open(lv_fs_drv_t * drv, const char * path)
+{
+    void * dir = NULL;
+    
+    EFI_HANDLE dd=(EFI_HANDLE)drv->user_data;
+    int pi=drv->letter-'A';
+
+    if(dd==NULL) return NULL;
+    DiskRoot[pi]=LibOpenRoot(dd);
+
+    if(DiskRoot[pi]==NULL) return NULL;
+
+    CHAR16 TFP[1024]={0};
+    char PATH[1024]={0};
+    strrep(path,"/","\\",PATH);
+    AsciiStrToWideStr(PATH,TFP);
+    EFI_FILE_PROTOCOL *FILE;
+    EFI_STATUS Status=DiskRoot[pi]->Open(DiskRoot[pi],&FILE,TFP,EFI_FILE_MODE_READ,0);
+    if(Status != EFI_SUCCESS) {
+      Print(L"OPEN DIR FAILED: %s\n",TFP);
+      return NULL;
+    }
+
+    dir = FILE;      
+    OpenedDir=dir;
+    DirIndex=-1;
+    
+    Print(L"OPENED DIR: %s\n",TFP);    
+    return dir;
+}
+
+static lv_fs_res_t fs_dir_read(lv_fs_drv_t * drv, void * rddir_p, char * fn, uint32_t fn_len)
+{
+    lv_fs_res_t res = LV_FS_RES_NOT_IMP;
+
+    if(DirIndex==-1)
+    {
+      //FIRST READ FILE LIST
+      EFI_STATUS Status=LibFindFiles((EFI_FILE_HANDLE)rddir_p,NULL,(EFI_HANDLE)drv->user_data);
+      if(Status != EFI_SUCCESS)
+      {
+        return LV_FS_RES_NOT_EX;
+      }
+      else
+      {
+        DirIndex=0;
+      }
+    }
+
+    if(DirIndex < FileMaxCount)
+    {
+      fn=DirFiles[DirIndex];
+      fn_len=lv_strlen(fn); 
+      CHAR16 sfn[1024]={0};
+      AsciiStrToWideStr(fn,sfn);
+
+      DirIndex++;
+      
+      Print(L"%x/%x: %a %s %s\n",DirIndex-1,FileMaxCount,fn,sfn,L"DIR READ OK");
+    }
+    else
+    {
+      fn=NULL;
+      fn_len=0;
+      //Print(L"%s\n",L"DIR READ END");
+    }
+    
+    res=LV_FS_RES_OK;
+    return res;
+}
+
+static lv_fs_res_t fs_dir_close(lv_fs_drv_t * drv, void * rddir_p)
+{
+    lv_fs_res_t res = LV_FS_RES_NOT_IMP;
+
+    OpenedDir=NULL;
+    DirIndex=-1;
+    FileMaxCount=0;
+    realloc(DirFiles,sizeof(char*)*1024);
+
+    Print(L"DIR CLOSED\n");
+    
+    res=LV_FS_RES_OK;
+    return res;
+}
+
+void RegisterLVGLFs()
+{
+  unsigned char LETTER='A';
+
+  for(unsigned char i=0;i<DiskCount;i++)
+  {
+    
+    lv_fs_drv_init(&(fs[i]));
+    fs[i].letter = LETTER+i;                         /*An uppercase letter to identify the drive */
+    fs[i].cache_size = 0;           /*Cache size for reading in bytes. 0 to not cache.*/
+
+    fs[i].open_cb = NULL;                 /*Callback to open a file */
+    fs[i].close_cb = NULL;               /*Callback to close a file */
+    fs[i].read_cb = NULL;                 /*Callback to read a file */
+    fs[i].write_cb = NULL;               /*Callback to write a file */
+    fs[i].seek_cb = NULL;                 /*Callback to seek in a file (Move cursor) */
+    fs[i].tell_cb = NULL;                 /*Callback to tell the cursor position  */
+
+    fs[i].dir_open_cb = fs_dir_open;         /*Callback to open directory to read its content */
+    fs[i].dir_read_cb = fs_dir_read;         /*Callback to read a directory's content */
+    fs[i].dir_close_cb = fs_dir_close;       /*Callback to close a directory */
+
+    fs[i].user_data = DiskDrives[i];             /*Any custom data if required*/
+
+    lv_fs_drv_register(&(fs[i]));                 /*Finally register the drive*/
+
+  }
+}
+#endif
+
+void InitEfiFs()
+{
+  LoadFileSystem();
+  #if USE_LVGL
+  RegisterLVGLFs();
+  #endif
 }
