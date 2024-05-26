@@ -18,8 +18,16 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
 void LoadFileSystem();
 void InitEfiFs();
 
+struct DirFileInfo
+{
+    char* FileName;    
+};
+
+typedef struct DirFileInfo DirFilePTR;
+
 extern EFI_HANDLE DiskDrives[26];
 extern UINTN DiskCount;
 extern EFI_FILE_HANDLE DiskRoot[26];
+extern DirFilePTR *DirFiles;
 
 #endif

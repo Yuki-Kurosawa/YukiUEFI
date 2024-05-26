@@ -16,7 +16,7 @@ UINTN DiskCount=0;
 EFI_FILE_HANDLE DiskRoot[26]={0};
 void* OpenedDir=0;
 int DirIndex=0;
-char* DirFiles[1024]={0};
+DirFilePTR *DirFiles;
 int FileMaxCount=0;
 
 
@@ -175,11 +175,13 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
         continue;
       }
 
-      char fn[1024]={0};
+      char *fn=malloc(sizeof(char)*1024);      
       WideStrToAsciiStr(DirInfo->FileName,fn);
 
-      DirFiles[k]=fn;
-      Print(L"%x %a %s\n",k,DirFiles[k],DirInfo->FileName);
+      DirFilePTR ptr={fn};
+
+      DirFiles[k]=ptr;
+      Print(L"%x %a %s %a\n",k,DirFiles[k].FileName,DirInfo->FileName,DirFiles[0].FileName);
       k++;
       OptionNumber++;
       //InsertTailList (&gFileExplorerPrivate.FsOptionMenu->Head, &NewMenuEntry->Link);
@@ -190,6 +192,12 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
 
 //Done:
   FileMaxCount=OptionNumber;
+
+  for(int i=0;i<FileMaxCount;i++)
+  {
+    Print(L"%x=%a\n",i,DirFiles[i].FileName);
+  }
+
   FreePool (DirInfo);
 
   return Status;
@@ -328,7 +336,7 @@ void LoadFileSystem()
                 FreePool (Info);
             }
 
-            LibFindFiles(EfiFpHandle,NULL,DiskDrives[Index]);
+            //LibFindFiles(EfiFpHandle,NULL,DiskDrives[Index]);
 
             //LabelAppendText(label1,"","----------------------\n");
 
@@ -376,8 +384,9 @@ static void * fs_dir_open(lv_fs_drv_t * drv, const char * path)
     dir = FILE;      
     OpenedDir=dir;
     DirIndex=-1;
+    DirFiles=malloc(sizeof(DirFilePTR)*1024);
     
-    Print(L"OPENED DIR: %s\n",TFP);    
+    Print(L"OPENED DIR: %a:%s\n",&drv->letter,TFP);    
     return dir;
 }
 
@@ -401,7 +410,7 @@ static lv_fs_res_t fs_dir_read(lv_fs_drv_t * drv, void * rddir_p, char * fn, uin
 
     if(DirIndex < FileMaxCount)
     {
-      fn=DirFiles[DirIndex];
+      fn=DirFiles[DirIndex].FileName;
       fn_len=lv_strlen(fn); 
       CHAR16 sfn[1024]={0};
       AsciiStrToWideStr(fn,sfn);

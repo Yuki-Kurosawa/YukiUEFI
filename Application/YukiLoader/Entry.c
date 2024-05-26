@@ -101,36 +101,6 @@ UefiMain (
   return EFI_SUCCESS;
 }
 
-bool ready(lv_fs_drv_t *drv)
-{
-  return true;
-}
-
-void RegisterFS()
-{
-  lv_fs_drv_init(&fs);
-  fs.letter = 'A';                         /*An uppercase letter to identify the drive */
-  fs.cache_size = 0;           /*Cache size for reading in bytes. 0 to not cache.*/
-
-  fs.ready_cb = ready;               /*Callback to tell if the drive is ready to use */
-  fs.open_cb = NULL;                 /*Callback to open a file */
-  fs.close_cb = NULL;               /*Callback to close a file */
-  fs.read_cb = NULL;                 /*Callback to read a file */
-  fs.write_cb = NULL;               /*Callback to write a file */
-  fs.seek_cb = NULL;                 /*Callback to seek in a file (Move cursor) */
-  fs.tell_cb = NULL;                 /*Callback to tell the cursor position  */
-
-  fs.dir_open_cb = NULL;         /*Callback to open directory to read its content */
-  fs.dir_read_cb = NULL;         /*Callback to read a directory's content */
-  fs.dir_close_cb = NULL;       /*Callback to close a directory */
-
-  fs.user_data = NULL;             /*Any custom data if required*/
-
-  lv_fs_drv_register(&fs);                 /*Finally register the drive*/
-}
-
-
-
 static void file_explorer_event_handler(lv_event_t * e)
 {
     lv_event_code_t code = lv_event_get_code(e);
