@@ -421,9 +421,9 @@ static lv_fs_res_t fs_dir_read(lv_fs_drv_t * drv, void * rddir_p, char * fn, uin
     }
     else
     {
-      fn=NULL;
+      fn="";
       fn_len=0;
-      //Print(L"%s\n",L"DIR READ END");
+      //Print(L"%x %s\n",DirIndex,L"DIR READ END");
     }
     
     res=LV_FS_RES_OK;
@@ -473,6 +473,38 @@ void RegisterLVGLFs()
 
   }
 }
+
+void TestFs()
+{
+  lv_fs_dir_t dir;
+  lv_fs_res_t res;
+  res = lv_fs_dir_open(&dir, "A:/");
+  if(res != LV_FS_RES_OK) {Print(L"ERROR 1\n");};
+
+  char fn[256];
+  while(1) {
+      res = lv_fs_dir_read(&dir, fn, sizeof(fn));
+      if(res != LV_FS_RES_OK) {
+          Print(L"ERROR 2\n");
+          break;
+      }
+
+      /*fn is empty, if not more files to read*/
+      if(lv_strlen(fn) == 0) {
+          break;
+      }
+
+      CHAR16* lfn=malloc(sizeof(CHAR16)*1024);
+      AsciiStrToWideStr(fn,lfn);
+
+      Print(L"READ: %s\n", fn);
+  }
+
+  Print(L"READ DONE\n");
+
+  lv_fs_dir_close(&dir);
+}
+
 #endif
 
 void InitEfiFs()
@@ -480,5 +512,6 @@ void InitEfiFs()
   LoadFileSystem();
   #if USE_LVGL
   RegisterLVGLFs();
+  //TestFs();
   #endif
 }
