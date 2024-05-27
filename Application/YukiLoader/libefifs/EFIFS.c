@@ -512,6 +512,6 @@ void InitEfiFs()
   LoadFileSystem();
   #if USE_LVGL
   RegisterLVGLFs();
-  //TestFs();
+  TestFs();
   #endif
 }

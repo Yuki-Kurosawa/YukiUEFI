@@ -297,10 +297,6 @@
   # widgets
   lvgl/demos/widgets/lv_demo_widgets.c
 
-  #examples
-  lvgl/examples/others/file_explorer/lv_example_file_explorer_1.c
-  lvgl/examples/others/file_explorer/lv_example_file_explorer_2.c
-  lvgl/examples/others/file_explorer/lv_example_file_explorer_3.c
 
 [Packages.common]
   MdePkg/MdePkg.dec

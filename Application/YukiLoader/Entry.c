@@ -29,7 +29,6 @@
 #include "libefifs/EFIFS.h"
 //#include <stdlib.h>
 //#include <string.h>
-#include "lvgl/examples/others/file_explorer/lv_example_file_explorer.h"
 
 
 extern EFI_BOOT_SERVICES         *gBS;
@@ -40,8 +39,6 @@ extern EFI_HANDLE				 gImageHandle;
 
 static EFI_GUID GraphicsOutputProtocolGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
 static EFI_GRAPHICS_OUTPUT_PROTOCOL *GraphicsOutput = NULL;
-
-void RegisterFS();
 
 /**
   The user Entry Point for Application. The user code starts with this function
@@ -94,8 +91,6 @@ UefiMain (
   //ShowMsgBox(wg,"Hello World!","Message");
   //ShowFS(wg);
   InitEfiFs();
-  //RegisterFS();
-  lv_example_file_explorer_3();
   Evt_Exit();
   return EFI_SUCCESS;
 }
