@@ -91,6 +91,7 @@ UefiMain (
   //ShowMsgBox(wg,"Hello World!","Message");
   //ShowFS(wg);
   InitEfiFs();
+  Draw();
   Evt_Exit();
   return EFI_SUCCESS;
 }

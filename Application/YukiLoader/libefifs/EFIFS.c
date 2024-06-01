@@ -181,7 +181,7 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
       DirFilePTR ptr={fn};
 
       DirFiles[k]=ptr;
-      Print(L"%x %a %s %a\n",k,DirFiles[k].FileName,DirInfo->FileName,DirFiles[0].FileName);
+      //Print(L"%x %a %s %a\n",k,DirFiles[k].FileName,DirInfo->FileName,DirFiles[0].FileName);
       k++;
       OptionNumber++;
       //InsertTailList (&gFileExplorerPrivate.FsOptionMenu->Head, &NewMenuEntry->Link);
@@ -195,7 +195,7 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
 
   for(int i=0;i<FileMaxCount;i++)
   {
-    Print(L"%x=%a\n",i,DirFiles[i].FileName);
+    //Print(L"%x=%a\n",i,DirFiles[i].FileName);
   }
 
   FreePool (DirInfo);
@@ -270,11 +270,7 @@ void LoadFileSystem()
             WideStrToAsciiStr(FileName,buf2);
             WideStrToAsciiStr(VolumeLabel,buf3);
 
-            //LabelAppendText(label1,"","FOUND:");
-            //LabelAppendText(label1," ",buf);
-            //LabelAppendText(label1,",",buf2);
-            //LabelAppendText(label1,",",buf3);
-            //LabelAppendText(label1,"","\n");
+            
 
             SysInfo     = NULL;
             SysInfoSize = 0;
@@ -310,25 +306,7 @@ void LoadFileSystem()
               //LabelAppendUINT64(label1,"",SysInfo->BlockSize);
               //LabelAppendText(label1,",", "BLOCK\n");
 
-              CHAR16* FP=L"\\test\\test16le.txt";
-              CHAR16 *TFP=FP;
-              EFI_FILE_PROTOCOL *FILE;
-              Status=EfiFpHandle->Open(FileHandle,&FILE,TFP,EFI_FILE_MODE_READ,0);
-              if(Status==EFI_SUCCESS)
-              {
-                Print(L"FILE OPEN SUCCESS\n");
-                CHAR16 BUF[1000]={0};
-                UINTN size=1000ull;
-                UINT64 POS=0;
-                FILE->Read(FILE,&size, BUF);
-                FILE->GetPosition(FILE,&POS);
-                Print(L"%s\n%d\t%d\n",BUF,POS,size);
-                FILE->Close(FILE);
-              }
-              else
-              {
-                Print(L"FILE OPEN FAILED\n");
-              }
+              
             }
 
             
@@ -358,6 +336,73 @@ void LoadFileSystem()
 
 static lv_fs_drv_t fs[26]={0};
 
+static void * fs_open(lv_fs_drv_t * drv, const char * path, lv_fs_mode_t mode)
+{
+    lv_fs_res_t res = LV_FS_RES_NOT_IMP;
+
+    void * f = NULL;    
+
+    if(mode | LV_FS_MODE_RD == LV_FS_MODE_RD) 
+    {
+      EFI_HANDLE dd=(EFI_HANDLE)drv->user_data;
+      int pi=drv->letter-'A';
+
+      if(dd==NULL) return NULL;
+      DiskRoot[pi]=LibOpenRoot(dd);
+
+      if(DiskRoot[pi]==NULL) return NULL;
+
+      CHAR16 *TFP=malloc(sizeof(CHAR16)*1024);
+      char PATH[1024]={0};
+      strrep(path,"/","\\",PATH);
+      AsciiStrToWideStr(PATH,TFP);
+
+      EFI_FILE_PROTOCOL *FILE;
+      EFI_STATUS Status=DiskRoot[pi]->Open(DiskRoot[pi],&FILE,TFP,EFI_FILE_MODE_READ,0);
+      if(Status==EFI_SUCCESS)
+      {
+        //Print(L"FILE OPEN SUCCESS\n");
+        res = LV_FS_RES_OK;
+        return FILE;
+      }
+      else
+      {
+        //Print(L"FILE OPEN FAILED\n");
+        res = LV_FS_RES_FS_ERR;
+      }
+    }
+    else
+    {
+      //Print(L"MODE NOT SUPPORTED\n");
+    }
+
+    return f;
+}
+
+static lv_fs_res_t fs_close(lv_fs_drv_t * drv, void * file_p)
+{
+    lv_fs_res_t res = LV_FS_RES_OK;   
+
+    EFI_FILE_PROTOCOL *FP=(EFI_FILE_PROTOCOL *)file_p;
+
+    FP->Close(FP);
+
+    //Print(L"FILE CLOSED\n");
+
+    return res;
+}
+
+/*
+  CHAR16 BUF[1000]={0};
+  UINTN size=1000ull;
+  UINT64 POS=0;
+  FILE->Read(FILE,&size, BUF);
+  FILE->GetPosition(FILE,&POS);
+  Print(L"%s\n%d\t%d\n",BUF,POS,size);
+  FILE->Close(FILE);
+*/
+
+
 static void * fs_dir_open(lv_fs_drv_t * drv, const char * path)
 {
     void * dir = NULL;
@@ -377,7 +422,7 @@ static void * fs_dir_open(lv_fs_drv_t * drv, const char * path)
     EFI_FILE_PROTOCOL *FILE;
     EFI_STATUS Status=DiskRoot[pi]->Open(DiskRoot[pi],&FILE,TFP,EFI_FILE_MODE_READ,0);
     if(Status != EFI_SUCCESS) {
-      Print(L"OPEN DIR FAILED: %s\n",TFP);
+      //Print(L"OPEN DIR FAILED: %s\n",TFP);
       return NULL;
     }
 
@@ -386,8 +431,71 @@ static void * fs_dir_open(lv_fs_drv_t * drv, const char * path)
     DirIndex=-1;
     DirFiles=malloc(sizeof(DirFilePTR)*1024);
     
-    Print(L"OPENED DIR: %a:%s\n",&drv->letter,TFP);    
+    //Print(L"OPENED DIR: %a:%s\n",&drv->letter,TFP);    
     return dir;
+}
+
+static lv_fs_res_t fs_read(lv_fs_drv_t * drv, void * file_p, void * buf, uint32_t btr, uint32_t * br)
+{
+    lv_fs_res_t res = LV_FS_RES_OK;
+
+    EFI_FILE_PROTOCOL *fp=(EFI_FILE_PROTOCOL*)file_p;
+
+    UINTN Size=btr;
+
+    EFI_STATUS Status=fp->Read(fp,&Size,buf);
+
+    if(Status==EFI_SUCCESS)
+    {
+      br=Size & 0xFFFFFFFF;
+      //Print(L"READ BYTES SUCCESS\n");
+    }
+
+    return res;
+}
+
+static lv_fs_res_t fs_write(lv_fs_drv_t * drv, void * file_p, const void * buf, uint32_t btw, uint32_t * bw)
+{
+    lv_fs_res_t res = LV_FS_RES_NOT_IMP;
+
+    /*Add your code here*/
+
+    return res;
+}
+
+static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs_whence_t whence)
+{
+    lv_fs_res_t res = LV_FS_RES_OK;
+
+    EFI_FILE_PROTOCOL *fp=(EFI_FILE_PROTOCOL*)file_p;
+
+    UINTN pos_t=pos;
+
+    EFI_STATUS Status=fp->SetPosition(fp,pos_t);
+    if(Status==EFI_SUCCESS)
+    {
+      //Print(L"SEEK SUCCESS\n");
+    }
+
+    return res;
+}
+
+static lv_fs_res_t fs_tell(lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p)
+{
+    lv_fs_res_t res = LV_FS_RES_OK;
+
+    EFI_FILE_PROTOCOL *fp=(EFI_FILE_PROTOCOL*)file_p;
+
+    UINTN pos=0;
+
+    EFI_STATUS Status=fp->GetPosition(fp,&pos);
+    if(Status==EFI_SUCCESS)
+    {
+      //Print(L"TELL SUCCESS\n");
+      pos_p=pos & 0xFFFFFFFF;
+    }
+
+    return res;
 }
 
 static lv_fs_res_t fs_dir_read(lv_fs_drv_t * drv, void * rddir_p, char * fn, uint32_t fn_len)
@@ -417,7 +525,7 @@ static lv_fs_res_t fs_dir_read(lv_fs_drv_t * drv, void * rddir_p, char * fn, uin
 
       DirIndex++;
       
-      Print(L"%x/%x: %a %s %s\n",DirIndex-1,FileMaxCount,fn,sfn,L"DIR READ OK");
+      //Print(L"%x/%x: %a %s %s\n",DirIndex-1,FileMaxCount,fn,sfn,L"DIR READ OK");
     }
     else
     {
@@ -439,7 +547,7 @@ static lv_fs_res_t fs_dir_close(lv_fs_drv_t * drv, void * rddir_p)
     FileMaxCount=0;
     realloc(DirFiles,sizeof(char*)*1024);
 
-    Print(L"DIR CLOSED\n");
+    //Print(L"DIR CLOSED\n");
     
     res=LV_FS_RES_OK;
     return res;
@@ -456,12 +564,12 @@ void RegisterLVGLFs()
     fs[i].letter = LETTER+i;                         /*An uppercase letter to identify the drive */
     fs[i].cache_size = 0;           /*Cache size for reading in bytes. 0 to not cache.*/
 
-    fs[i].open_cb = NULL;                 /*Callback to open a file */
-    fs[i].close_cb = NULL;               /*Callback to close a file */
-    fs[i].read_cb = NULL;                 /*Callback to read a file */
-    fs[i].write_cb = NULL;               /*Callback to write a file */
-    fs[i].seek_cb = NULL;                 /*Callback to seek in a file (Move cursor) */
-    fs[i].tell_cb = NULL;                 /*Callback to tell the cursor position  */
+    fs[i].open_cb = fs_open;                 /*Callback to open a file */
+    fs[i].close_cb = fs_close;               /*Callback to close a file */
+    fs[i].read_cb = fs_read;                 /*Callback to read a file */
+    fs[i].write_cb = fs_write;               /*Callback to write a file */
+    fs[i].seek_cb = fs_seek;                 /*Callback to seek in a file (Move cursor) */
+    fs[i].tell_cb = fs_tell;                 /*Callback to tell the cursor position  */
 
     fs[i].dir_open_cb = fs_dir_open;         /*Callback to open directory to read its content */
     fs[i].dir_read_cb = fs_dir_read;         /*Callback to read a directory's content */
@@ -478,14 +586,16 @@ void TestFs()
 {
   lv_fs_dir_t dir;
   lv_fs_res_t res;
-  res = lv_fs_dir_open(&dir, "A:/");
-  if(res != LV_FS_RES_OK) {Print(L"ERROR 1\n");};
+  res = lv_fs_dir_open(&dir, "B:/");
+  if(res != LV_FS_RES_OK) {
+    //Print(L"ERROR 1\n");
+    };
 
   char fn[256];
   while(1) {
       res = lv_fs_dir_read(&dir, fn, sizeof(fn));
       if(res != LV_FS_RES_OK) {
-          Print(L"ERROR 2\n");
+          //Print(L"ERROR 2\n");
           break;
       }
 
@@ -497,10 +607,10 @@ void TestFs()
       CHAR16* lfn=malloc(sizeof(CHAR16)*1024);
       AsciiStrToWideStr(fn,lfn);
 
-      Print(L"READ: %s\n", fn);
+      //Print(L"READ: %s\n", fn);
   }
 
-  Print(L"READ DONE\n");
+  //Print(L"READ DONE\n");
 
   lv_fs_dir_close(&dir);
 }

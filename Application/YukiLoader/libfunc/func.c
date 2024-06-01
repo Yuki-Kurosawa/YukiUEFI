@@ -3,13 +3,13 @@
 void WideStrToAsciiStr(CHAR16 *w,CHAR8 *buffer)
 {
   UnicodeStrToAsciiStrS(w,buffer,1024);
-  Print(L"%a\n",buffer);
+  //Print(L"%a\n",buffer);
 }
 
 void AsciiStrToWideStr(CHAR8 *a,CHAR16 *buffer)
 {
   AsciiStrToUnicodeStrS(a,buffer,1024);
-  Print(L"%s\n",buffer);
+  //Print(L"%s\n",buffer);
 }
 
 void strrep(char *src,char* pattern,char* replace,char* dest) {

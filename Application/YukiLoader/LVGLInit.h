@@ -8,5 +8,6 @@
 
 void LVGLInitScreen();
 extern lv_group_t * wg;
+void Draw();
 
 #endif
