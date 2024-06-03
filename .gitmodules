@@ -4,3 +4,6 @@
 [submodule "Libs/libc"]
 	path = Libs/libc
 	url = https://github.com/tianocore/edk2-libc.git
+[submodule "Libs/libjpeg-turbo"]
+	path = Libs/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo
