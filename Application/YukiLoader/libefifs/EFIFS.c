@@ -443,14 +443,14 @@ static lv_fs_res_t fs_read(lv_fs_drv_t * drv, void * file_p, void * buf, uint32_
 
     UINTN Size=btr;
 
-    Print(L"READ %x BYTES BEGIN\n",btr);
+    //Print(L"READ %x BYTES BEGIN\n",btr);
 
     EFI_STATUS Status=fp->Read(fp,&Size,buf);
 
     if(Status==EFI_SUCCESS)
     {
       *br=Size & 0xFFFFFFFF;
-      Print(L"READ %d BYTES SUCCESS %x\n",Size,*br);
+      //Print(L"READ %d BYTES SUCCESS %x\n",Size,*br);
     }
 
     return res;
