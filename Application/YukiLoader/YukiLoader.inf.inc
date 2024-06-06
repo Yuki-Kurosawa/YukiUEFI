@@ -67,3 +67,5 @@
 [Guids]
   gEfiFileSystemVolumeLabelInfoIdGuid
   gEfiFileSystemInfoGuid
+  gEfiFileInfoGuid
+

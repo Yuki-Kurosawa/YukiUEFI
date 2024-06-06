@@ -160,9 +160,9 @@
   FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
 
 [BuildOptions.common]
-  GCC:*_*_*_CC_FLAGS     = -nostdinc -nostdlib -I${HOME}/edk2/YukiPkg/Libs/libc/StdLib/Include -I${HOME}/edk2/YukiPkg/Libs/libc/StdLib/Include/X64
+  GCC:*_*_*_CC_FLAGS     = -nostdinc -nostdlib -I${HOME}/edk2/YukiPkg/Libs/libc/StdLib/Include -I${HOME}/edk2/YukiPkg/Libs/libc/StdLib/Include/X64 -I${HOME}/edk2/YukiPkg/Libs/libjpeg-turbo -D_BASETSD_H_=1 -DBITS_IN_JSAMPLE=8
 
 [Components]
-#  YukiPkg/Application/HelloWorld/HelloWorld.inf
+#  YukiPkg/Application/HelloWorld/HelloWorld.infwhe
   YukiPkg/Application/YukiLoader/YukiLoader.inf
   

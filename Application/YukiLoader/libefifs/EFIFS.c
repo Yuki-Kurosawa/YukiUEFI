@@ -178,7 +178,7 @@ EFI_STATUS LibFindFiles(IN EFI_FILE_HANDLE FileHandle, IN UINT16 *FileName, IN E
       char *fn=malloc(sizeof(char)*1024);      
       WideStrToAsciiStr(DirInfo->FileName,fn);
 
-      DirFilePTR ptr={fn};
+      DirFilePTR ptr={fn,DirInfo->FileSize};
 
       DirFiles[k]=ptr;
       //Print(L"%x %a %s %a\n",k,DirFiles[k].FileName,DirInfo->FileName,DirFiles[0].FileName);
@@ -443,12 +443,14 @@ static lv_fs_res_t fs_read(lv_fs_drv_t * drv, void * file_p, void * buf, uint32_
 
     UINTN Size=btr;
 
+    Print(L"READ %x BYTES BEGIN\n",btr);
+
     EFI_STATUS Status=fp->Read(fp,&Size,buf);
 
     if(Status==EFI_SUCCESS)
     {
-      br=Size & 0xFFFFFFFF;
-      //Print(L"READ BYTES SUCCESS\n");
+      *br=Size & 0xFFFFFFFF;
+      Print(L"READ %d BYTES SUCCESS %x\n",Size,*br);
     }
 
     return res;
@@ -465,16 +467,68 @@ static lv_fs_res_t fs_write(lv_fs_drv_t * drv, void * file_p, const void * buf, 
 
 static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs_whence_t whence)
 {
+    Print(L"SEEK\n");
     lv_fs_res_t res = LV_FS_RES_OK;
+
+    EFI_STATUS Status=EFI_SUCCESS;
 
     EFI_FILE_PROTOCOL *fp=(EFI_FILE_PROTOCOL*)file_p;
 
+    EFI_FILE_INFO  *DirInfo;
+    UINTN          BufferSize;
+    UINTN          DirBufferSize;
+
+    DirBufferSize = sizeof (EFI_FILE_INFO) + 1024;
+    DirInfo       = AllocateZeroPool (DirBufferSize);
+    if (DirInfo == NULL) 
+    {
+      return LV_FS_RES_FS_ERR;
+    }
+
+    if(Status != EFI_SUCCESS)
+    {
+      return LV_FS_RES_OUT_OF_MEM;
+    }
+
+    BufferSize = DirBufferSize;
+    Status     = fp->GetInfo(fp,&gEfiFileInfoGuid,&BufferSize,DirInfo);
+
+    if (Status == EFI_BUFFER_TOO_SMALL) {
+      DirInfo = AllocateZeroPool (BufferSize);    
+    }
+
+    Status     = fp->GetInfo(fp,&gEfiFileInfoGuid,&BufferSize,DirInfo);
+
+    if(Status!=EFI_SUCCESS)
+    {
+      Print(L"Get File Info Failed %x\n",Status);
+    }
+
     UINTN pos_t=pos;
 
-    EFI_STATUS Status=fp->SetPosition(fp,pos_t);
+    switch (whence)
+    {
+    case LV_FS_SEEK_SET:
+      break;
+    case LV_FS_SEEK_CUR:
+      UINTN pos2=0;
+      EFI_STATUS Status=fp->GetPosition(fp,&pos2);
+      pos_t=pos2+pos;
+    case LV_FS_SEEK_END:
+      pos_t=DirInfo->FileSize;
+      Print(L"%s %d Bytes\n",DirInfo->FileName,DirInfo->FileSize);
+    default:
+      break;
+    }
+
+    Status=fp->SetPosition(fp,pos_t);
     if(Status==EFI_SUCCESS)
     {
-      //Print(L"SEEK SUCCESS\n");
+      Print(L"SEEK %d at %x SUCCESS\n",pos_t,whence);
+    }    
+    else
+    {
+      Print(L"SEEK %x FAILED\n",pos);
     }
 
     return res;
@@ -482,6 +536,7 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs
 
 static lv_fs_res_t fs_tell(lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p)
 {
+    Print(L"TELL\n");
     lv_fs_res_t res = LV_FS_RES_OK;
 
     EFI_FILE_PROTOCOL *fp=(EFI_FILE_PROTOCOL*)file_p;
@@ -491,8 +546,12 @@ static lv_fs_res_t fs_tell(lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p)
     EFI_STATUS Status=fp->GetPosition(fp,&pos);
     if(Status==EFI_SUCCESS)
     {
-      //Print(L"TELL SUCCESS\n");
-      pos_p=pos & 0xFFFFFFFF;
+      Print(L"TELL %d SUCCESS\n",pos);
+      *pos_p=pos & 0xFFFFFFFF;
+    }
+    else
+    {
+      Print(L"TELL %x FAILED\n",pos);
     }
 
     return res;

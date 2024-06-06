@@ -20,7 +20,8 @@ void InitEfiFs();
 
 struct DirFileInfo
 {
-    char* FileName;    
+    char* FileName;   
+    UINTN FileSize; 
 };
 
 typedef struct DirFileInfo DirFilePTR;

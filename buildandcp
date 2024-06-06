@@ -11,6 +11,7 @@ BOOTDEV='I:'
 
 cat YukiPkg/Application/YukiLoader/YukiLoader.inf.inc > YukiPkg/Application/YukiLoader/YukiLoader.inf
 cat YukiPkg/Include/lvgl.inf.inc >> YukiPkg/Application/YukiLoader/YukiLoader.inf
+cat YukiPkg/Include/jdmaster.c > YukiPkg/Libs/libjpeg-turbo/jdmaster.c
 
 sudo mkdir -p $BOOT
 sudo mount -t drvfs $BOOTDEV $BOOT
