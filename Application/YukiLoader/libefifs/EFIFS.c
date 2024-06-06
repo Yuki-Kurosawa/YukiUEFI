@@ -467,7 +467,7 @@ static lv_fs_res_t fs_write(lv_fs_drv_t * drv, void * file_p, const void * buf, 
 
 static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs_whence_t whence)
 {
-    Print(L"SEEK\n");
+    //Print(L"SEEK\n");
     lv_fs_res_t res = LV_FS_RES_OK;
 
     EFI_STATUS Status=EFI_SUCCESS;
@@ -501,7 +501,7 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs
 
     if(Status!=EFI_SUCCESS)
     {
-      Print(L"Get File Info Failed %x\n",Status);
+      //Print(L"Get File Info Failed %x\n",Status);
     }
 
     UINTN pos_t=pos;
@@ -516,7 +516,7 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs
       pos_t=pos2+pos;
     case LV_FS_SEEK_END:
       pos_t=DirInfo->FileSize;
-      Print(L"%s %d Bytes\n",DirInfo->FileName,DirInfo->FileSize);
+      //Print(L"%s %d Bytes\n",DirInfo->FileName,DirInfo->FileSize);
     default:
       break;
     }
@@ -524,11 +524,11 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs
     Status=fp->SetPosition(fp,pos_t);
     if(Status==EFI_SUCCESS)
     {
-      Print(L"SEEK %d at %x SUCCESS\n",pos_t,whence);
+      //Print(L"SEEK %d at %x SUCCESS\n",pos_t,whence);
     }    
     else
     {
-      Print(L"SEEK %x FAILED\n",pos);
+      //Print(L"SEEK %x FAILED\n",pos);
     }
 
     return res;
@@ -536,7 +536,7 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs
 
 static lv_fs_res_t fs_tell(lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p)
 {
-    Print(L"TELL\n");
+    //Print(L"TELL\n");
     lv_fs_res_t res = LV_FS_RES_OK;
 
     EFI_FILE_PROTOCOL *fp=(EFI_FILE_PROTOCOL*)file_p;
@@ -546,12 +546,12 @@ static lv_fs_res_t fs_tell(lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p)
     EFI_STATUS Status=fp->GetPosition(fp,&pos);
     if(Status==EFI_SUCCESS)
     {
-      Print(L"TELL %d SUCCESS\n",pos);
+      //Print(L"TELL %d SUCCESS\n",pos);
       *pos_p=pos & 0xFFFFFFFF;
     }
     else
     {
-      Print(L"TELL %x FAILED\n",pos);
+      //Print(L"TELL %x FAILED\n",pos);
     }
 
     return res;
