@@ -362,6 +362,9 @@
   libjpeg-turbo/jcarith.c
   libjpeg-turbo/jdarith.c
 
+  #libpng
+  libpng/png.c
+
   
 [Packages.common]
   MdePkg/MdePkg.dec

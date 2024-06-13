@@ -10,3 +10,6 @@
 [submodule "Libs/libpng"]
 	path = Libs/libpng
 	url = https://github.com/pnggroup/libpng
+[submodule "Libs/libz"]
+	path = Libs/libz
+	url = https://github.com/madler/zlib
