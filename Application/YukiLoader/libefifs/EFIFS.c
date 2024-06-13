@@ -338,11 +338,11 @@ static lv_fs_drv_t fs[26]={0};
 
 static void * fs_open(lv_fs_drv_t * drv, const char * path, lv_fs_mode_t mode)
 {
-    lv_fs_res_t res = LV_FS_RES_NOT_IMP;
+    //lv_fs_res_t res;
 
     void * f = NULL;    
 
-    if(mode | LV_FS_MODE_RD == LV_FS_MODE_RD) 
+    if((mode | LV_FS_MODE_RD) == LV_FS_MODE_RD) 
     {
       EFI_HANDLE dd=(EFI_HANDLE)drv->user_data;
       int pi=drv->letter-'A';
@@ -354,7 +354,7 @@ static void * fs_open(lv_fs_drv_t * drv, const char * path, lv_fs_mode_t mode)
 
       CHAR16 *TFP=malloc(sizeof(CHAR16)*1024);
       char PATH[1024]={0};
-      strrep(path,"/","\\",PATH);
+      strrep_const(path,"/","\\",PATH);
       AsciiStrToWideStr(PATH,TFP);
 
       EFI_FILE_PROTOCOL *FILE;
@@ -362,18 +362,21 @@ static void * fs_open(lv_fs_drv_t * drv, const char * path, lv_fs_mode_t mode)
       if(Status==EFI_SUCCESS)
       {
         //Print(L"FILE OPEN SUCCESS\n");
-        res = LV_FS_RES_OK;
+        //res = LV_FS_RES_OK;
         return FILE;
       }
       else
       {
         //Print(L"FILE OPEN FAILED\n");
-        res = LV_FS_RES_FS_ERR;
+        //res = LV_FS_RES_FS_ERR;
+        return NULL;
       }
     }
     else
     {
       //Print(L"MODE NOT SUPPORTED\n");
+      //res=LV_FS_RES_DENIED;
+      return NULL;
     }
 
     return f;
@@ -417,7 +420,7 @@ static void * fs_dir_open(lv_fs_drv_t * drv, const char * path)
 
     CHAR16 TFP[1024]={0};
     char PATH[1024]={0};
-    strrep(path,"/","\\",PATH);
+    strrep_const(path,"/","\\",PATH);
     AsciiStrToWideStr(PATH,TFP);
     EFI_FILE_PROTOCOL *FILE;
     EFI_STATUS Status=DiskRoot[pi]->Open(DiskRoot[pi],&FILE,TFP,EFI_FILE_MODE_READ,0);
@@ -512,8 +515,8 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs
       break;
     case LV_FS_SEEK_CUR:
       UINTN pos2=0;
-      EFI_STATUS Status=fp->GetPosition(fp,&pos2);
-      pos_t=pos2+pos;
+      //EFI_STATUS Status=fp->GetPosition(fp,&pos2);
+      pos_t=pos2 + pos;
     case LV_FS_SEEK_END:
       pos_t=DirInfo->FileSize;
       //Print(L"%s %d Bytes\n",DirInfo->FileName,DirInfo->FileSize);
