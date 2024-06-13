@@ -433,8 +433,37 @@
   libjpeg-turbo/jcarith.c
   libjpeg-turbo/jdarith.c
 
+  #libz
+  libz/adler32.c
+  libz/compress.c
+  libz/crc32.c
+  libz/deflate.c
+  libz/gzclose.c
+  libz/gzlib.c
+  libz/gzread.c
+  libz/gzwrite.c
+  libz/infback.c
+  libz/inffast.c
+  libz/inflate.c
+  libz/inftrees.c
+  libz/trees.c
+  libz/uncompr.c
+  libz/zutil.c
+
   #libpng
   libpng/png.c
+  libpng/pngerror.c
+  libpng/pngget.c
+  libpng/pngmem.c
+  libpng/pngread.c
+  libpng/pngrio.c
+  libpng/pngrutil.c
+  libpng/pngrtran.c
+  libpng/pngset.c
+  libpng/pngtrans.c
+  libpng/pngwio.c
+  libpng/pngwrite.c
+  libpng/pngwutil.c
 
   
 [Packages.common]
