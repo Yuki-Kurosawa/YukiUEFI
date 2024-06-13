@@ -7,3 +7,6 @@
 [submodule "Libs/libjpeg-turbo"]
 	path = Libs/libjpeg-turbo
 	url = https://github.com/libjpeg-turbo/libjpeg-turbo
+[submodule "Libs/libpng"]
+	path = Libs/libpng
+	url = https://github.com/pnggroup/libpng
