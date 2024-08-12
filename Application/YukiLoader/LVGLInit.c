@@ -57,11 +57,68 @@ void LVGLInitScreen()
     
 }
 
+void lv_example_freetype_1(void)
+{
+    /*Create a font*/
+    lv_font_t * font = lv_freetype_font_create("A:/simhei.ttf",
+                                               LV_FREETYPE_FONT_RENDER_MODE_BITMAP,
+                                               24,
+                                               LV_FREETYPE_FONT_STYLE_NORMAL);
+
+    if(!font) {
+        LV_LOG_ERROR("freetype font create failed.");
+        return;
+    }
+
+    /*Create style with the new font*/
+    static lv_style_t style;
+    lv_style_init(&style);
+    lv_style_set_text_font(&style, font);
+    lv_style_set_text_align(&style, LV_TEXT_ALIGN_CENTER);
+
+    /*Create a label with the new style*/
+    lv_obj_t * label = lv_label_create(lv_screen_active());
+    lv_obj_add_style(label, &style, 0);
+    lv_label_set_text(label, "欢迎");
+    lv_obj_set_align(label,LV_ALIGN_TOP_LEFT);
+}
+
+void lv_example_freetype_2(void)
+{
+    /*Create a font*/
+    lv_font_t * font = lv_freetype_font_create("A:/msmincho.ttc",
+                                               LV_FREETYPE_FONT_RENDER_MODE_BITMAP,
+                                               24,
+                                               LV_FREETYPE_FONT_STYLE_NORMAL);
+
+    if(!font) {
+        LV_LOG_ERROR("freetype font create failed.");
+        return;
+    }
+
+    /*Create style with the new font*/
+    static lv_style_t style;
+    lv_style_init(&style);
+    lv_style_set_text_font(&style, font);
+    lv_style_set_text_align(&style, LV_TEXT_ALIGN_CENTER);
+
+    /*Create a label with the new style*/
+    lv_obj_t * label = lv_label_create(lv_screen_active());
+    lv_obj_add_style(label, &style, 0);
+    lv_label_set_text(label, "よこそ");
+    lv_obj_set_align(label,LV_ALIGN_TOP_RIGHT);
+}
+
 void Draw()
 {
+    
+    lv_example_freetype_1();
+    lv_example_freetype_2();
+
     lv_obj_t * img = lv_image_create(lv_screen_active());
     /* Assuming a File system is attached to letter 'A'
      * E.g. set LV_USE_FS_STDIO 'A' in lv_conf.h */
     lv_image_set_src(img, "B:/front.png");
     lv_obj_center(img);
+
 }
