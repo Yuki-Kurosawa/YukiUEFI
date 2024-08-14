@@ -16,3 +16,6 @@
 [submodule "Libs/freetype2"]
 	path = Libs/freetype2
 	url = https://gitlab.freedesktop.org/freetype/freetype.git
+[submodule "Libs/ffmpeg"]
+	path = Libs/ffmpeg
+	url = https://github.com/ffmpeg/ffmpeg.git
