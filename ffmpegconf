@@ -1,0 +1,14 @@
+#! /bin/bash
+
+./configure --disable-all --disable-autodetect --disable-podpages --disable-asm --enable-avcodec --disable-pthreads \
+--enable-avformat --enable-swscale --enable-protocol=file --disable-iconv --disable-network \
+ --prefix=/ffmpeg \
+ --enable-decoder={h264,aac,aac_fixed,flac,mp3float,mp3,mp3adufloat,mp3adu,mp3on4float,mp3on4,als} \
+ --enable-encoder={aac,flac} \
+ --enable-demuxer={aac,flac,h264,mp3} \
+ --enable-muxer={flac,h264,mp3,mp4}
+
+make | sed -re 's/AR.*//g' -re 's/GEN.*//g' -re 's/CC[\t](.*).o/ffmpeg@\1.c/g' -e 's!@!/!g' > ../../ffmpeg.out
+sudo make install
+#make distclean
+#clear
