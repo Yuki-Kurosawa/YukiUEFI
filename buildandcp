@@ -20,7 +20,7 @@ sudo mount -t drvfs $BOOTDEV $BOOT
 rm -rvf $BOOT/EFI
 mkdir -p $BOOT/EFI/boot
 
-build -p YukiPkg/YukiUEFI.dsc
+build -p YukiPkg/YukiUEFI.dsc -b ${TARGET}
 cp Build/YukiPkg/${TARGET}_GCC/X64/*.efi $DEST
 cp Build/YukiPkg/${TARGET}_GCC/X64/*.efi $BOOT
 
