@@ -26,6 +26,7 @@
   lvgl/src/draw/lv_draw_rect.c
   lvgl/src/draw/lv_draw_triangle.c
   lvgl/src/draw/lv_draw_vector.c
+  lvgl/src/misc/cache/lv_image_header_cache.c
   lvgl/src/draw/lv_image_decoder.c
   # lvgl/src/draw/lv_image_buf.c
   lvgl/src/draw/nxp/pxp/lv_draw_buf_pxp.c
@@ -66,6 +67,9 @@
   lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_argb8888.c
   lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb565.c
   lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c
+  lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_al88.c
+  lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_i1.c
+  lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_l8.c
   lvgl/src/draw/sw/lv_draw_sw.c
   lvgl/src/draw/sw/lv_draw_sw_arc.c
   lvgl/src/draw/sw/lv_draw_sw_border.c
@@ -189,7 +193,7 @@
   lvgl/src/misc/cache/lv_cache.c
   lvgl/src/misc/cache/lv_cache_entry.c
   lvgl/src/misc/cache/lv_image_cache.c
-  lvgl/src/misc/cache/_lv_cache_lru_rb.c
+  lvgl/src/misc/cache/lv_cache_lru_rb.c
   lvgl/src/misc/lv_anim.c
   lvgl/src/misc/lv_anim_timeline.c
   lvgl/src/misc/lv_area.c
@@ -216,6 +220,7 @@
   lvgl/src/misc/lv_utils.c
   lvgl/src/osal/lv_cmsis_rtos2.c
   lvgl/src/osal/lv_freertos.c
+  lvgl/src/osal/lv_os.c
   lvgl/src/osal/lv_os_none.c
   lvgl/src/osal/lv_pthread.c
   lvgl/src/osal/lv_rtthread.c
