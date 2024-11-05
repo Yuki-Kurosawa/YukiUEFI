@@ -1,0 +1,6 @@
+{
+  "name":"edk2",
+  "image":"ubuntu:noble",
+  "features":{
+  }
+}
