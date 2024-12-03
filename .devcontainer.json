@@ -1,6 +1,6 @@
 {
   "name":"edk2",
-  "image":"ubuntu:noble",
+  "image":"yukikurosawadev/edk2:noble-dev-202411",
   "features":{
   }
 }
