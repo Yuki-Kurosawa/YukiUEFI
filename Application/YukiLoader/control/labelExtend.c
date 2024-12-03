@@ -1,3 +1,9 @@
+/** @file
+  This file is part of Yuki Loader
+  Copyright (C) 2024 Yuki Kurosawa. All Rights Reserved <BR/>
+  SPDX-License-Identifier: MIT
+**/
+
 #include "labelExtend.h"
 
 void LabelAppendText(lv_obj_t *lbl,char* split,char* text)

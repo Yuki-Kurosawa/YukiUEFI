@@ -1,13 +1,10 @@
-##  @file
-# YukiUEFI Package
-#
-# Copyright (c) 2007 - 2021, Intel Corporation. All rights reserved.<BR>
-# Copyright (c) 2018 - 2020, Arm Limited. All rights reserved.<BR>
-# Copyright (c) 2020, Hewlett Packard Enterprise Development LP. All rights reserved.<BR>
-#
-#    SPDX-License-Identifier: BSD-2-Clause-Patent
-#
-##
+### @file
+#  This file is part of Yuki Loader
+#  Copyright (C) 2024 Yuki Kurosawa. All Rights Reserved <BR/>
+#  SPDX-License-Identifier: MIT
+###
+
+
 
 [Defines]
   PLATFORM_NAME                  = YukiUEFI

@@ -1,11 +1,10 @@
 /** @file
-  This sample application bases on HelloWorld PCD setting
-  to print "UEFI Hello World!" to the UEFI Console.
-
-  Copyright (c) 2006 - 2018, Intel Corporation. All rights reserved.<BR>
-  SPDX-License-Identifier: BSD-2-Clause-Patent
-
+  This file is part of Yuki Loader
+  Copyright (C) 2024 Yuki Kurosawa. All Rights Reserved <BR/>
+  SPDX-License-Identifier: MIT
 **/
+
+
 
 #ifndef __LVGL_DXE_H__
 #define __LVGL_DXE_H__

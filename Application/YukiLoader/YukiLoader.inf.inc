@@ -1,17 +1,10 @@
-## @file
-#  Sample UEFI Application Reference EDKII Module.
-#
-#  This is a sample shell application that will print "UEFI Hello World!" to the
-#  UEFI Console based on PCD setting.
-#
-#  It demos how to use EDKII PCD mechanism to make code more flexible.
-#
-#  Copyright (c) 2008 - 2018, Intel Corporation. All rights reserved.<BR>
-#
-#  SPDX-License-Identifier: BSD-2-Clause-Patent
-#
-#
-##
+### @file
+#  This file is part of Yuki Loader
+#  Copyright (C) 2024 Yuki Kurosawa. All Rights Reserved <BR/>
+#  SPDX-License-Identifier: MIT
+###
+
+
 
 [Defines]
   INF_VERSION                    = 0x00010005
