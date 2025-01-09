@@ -2,14 +2,24 @@
 TARGET=DEBUG
 FILESYSTEM=vfat
 BS=1MiB
-COUNT=128 
+COUNT=256
 #RELEASE SIZE=82MiB
 #DEBUG SIZE=83MiB
 IMAGEDIR=/mnt/edk2
 IMAGE=${IMAGEDIR}/UEFI-STUB_${TARGET}.img
 WEBROOT=/var/www/html/edk2-build
-BUILDDEPS=1
-BUILDPKGS=1
+BUILDDEPS=0
+BUILDPKGS=0
+PICKDEPS=1
+PICKPKGS=1
+
+if [ $BUILDDEPS -eq 1 ];then
+    PICKDEPS=1
+fi
+
+if [ $BUILDPKGS -eq 1 ];then
+    PICKPKGS=1
+fi
 
 
 BuildDeps()
@@ -81,7 +91,7 @@ PickUp()
         sudo mount $IMAGE ${IMAGEDIR}/img
     fi
 
-    if [ $BUILDDEPS -eq 1 ];then
+    if [ $PICKDEPS -eq 1 ];then
         PickUpEFI CryptoPkg/All
         PickUpEFI MdeModule
         PickUpEFI NetworkPkg
@@ -90,8 +100,11 @@ PickUp()
         PickUpFV OvmfX64
     fi
 
-    if [ $BUILDPKGS -eq 1 ];then
+    if [ $BUILDPKGS -eq 1 ];then       
         TARGET=$TARGET ./YukiPkg/YukiPkg.Makefile
+    fi     
+
+    if [ $PICKPKGS -eq 1 ];then       
         PickUpEFI YukiPkg
     fi
     
