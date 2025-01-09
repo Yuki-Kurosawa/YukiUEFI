@@ -1,8 +1,0 @@
-#!/bin/bash
-TARGET=RELEASE
-
-build -p MdeModulePkg/MdeModulePkg.dsc -b ${TARGET}
-build -p CryptoPkg/CryptoPkg.dsc -b ${TARGET}
-build -p NetworkPkg/NetworkPkg.dsc -b ${TARGET}
-build -p ShellPkg/ShellPkg.dsc -b ${TARGET}
-build -p OvmfPkg/OvmfPkgX64.dsc -b ${TARGET}

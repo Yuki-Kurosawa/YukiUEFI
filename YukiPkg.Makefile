@@ -1,7 +1,8 @@
 #! /bin/bash
-DEST=/mnt/h/EDKTest/fd
-TARGET=DEBUG
-BOOT=/mnt/i
+
+if [ "x$TARGET" == "x" ];then
+    TARGET=DEBUG
+fi
 
 # cat YukiPkg/Application/HelloWorld/HelloWorld.inf.inc > YukiPkg/Application/HelloWorld/HelloWorld.inf
 # cat YukiPkg/Include/lvgl.inf.inc >> YukiPkg/Application/HelloWorld/HelloWorld.inf
@@ -15,16 +16,4 @@ cat YukiPkg/Include/jdmaster.c > YukiPkg/Libs/libjpeg-turbo/jdmaster.c
 cat YukiPkg/Include/jmorecfg.h > YukiPkg/Libs/libjpeg-turbo/jmorecfg.h
 cat YukiPkg/Include/pnglibconf.h > YukiPkg/Libs/libpng/pnglibconf.h
 
-
-rm -rvf $BOOT/EFI
-mkdir -p $BOOT/EFI/boot
-
 build -p YukiPkg/YukiUEFI.dsc -b ${TARGET}
-cp Build/YukiPkg/${TARGET}_GCC/X64/*.efi $DEST
-cp Build/YukiPkg/${TARGET}_GCC/X64/*.efi $BOOT
-
-# copy Shell to $BOOT
-cp Build/Shell/${TARGET}_GCC/X64/*.efi $BOOT
-cp Build/Shell/${TARGET}_GCC/X64/ShellPkg/Application/Shell/Shell/OUTPUT/Shell.efi $BOOT/EFI/boot/bootx64.efi
-
-
