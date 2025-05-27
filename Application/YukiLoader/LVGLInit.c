@@ -124,7 +124,7 @@ void Draw()
     lv_obj_t * img = lv_image_create(lv_screen_active());
     /* Assuming a File system is attached to letter 'A'
      * E.g. set LV_USE_FS_STDIO 'A' in lv_conf.h */
-    lv_image_set_src(img, "B:/front.png");
+    lv_image_set_src(img, "A:/front.png");
     lv_obj_center(img);
 
 }
