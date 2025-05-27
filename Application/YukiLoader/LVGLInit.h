@@ -7,7 +7,7 @@
 #include <lvgl/lvgl.h>
 #include "events.h"
 
-#include "windows/MsgBox.h"
+#include "control/MsgBox.h"
 
 #ifndef LVGLINIT_H
 #define LVGLINIT_H

@@ -35,7 +35,7 @@
   libfunc/func.c
   libefifs/EFIFS.c
     
-  windows/MsgBox.c
+  control/MsgBox.c
 
   Entry.c
   YukiLoaderStr.uni
