@@ -12,7 +12,7 @@
 #ifndef LVGLINIT_H
 #define LVGLINIT_H
 
-void LVGLInitScreen();
+void LVGLInitScreen(int32_t width, int32_t height);
 extern lv_group_t * wg;
 void Draw();
 

@@ -24,14 +24,16 @@
 EFI_SIMPLE_POINTER_PROTOCOL    *mSimplePointer1 = NULL;
 lv_group_t * wg;
 
-void LVGLInitScreen()
+void LVGLInitScreen(int32_t width, int32_t height)
 {
     lv_init();
 
-    lv_display_t *display = lv_display_create(1280,800);
+    lv_display_t *display = lv_display_create(width,height);
 
-    static lv_color32_t buf1[1280*800];
-    lv_display_set_buffers(display, buf1, NULL, sizeof(buf1), LV_DISPLAY_RENDER_MODE_FULL);
+    lv_color32_t *buf1; 
+	uint32_t buf_size = 4 * width * height; // 4 bytes per pixel (RGBA)
+	buf1=lv_malloc(buf_size);
+    lv_display_set_buffers(display, buf1, NULL, buf_size, LV_DISPLAY_RENDER_MODE_DIRECT);
 
     lv_display_set_flush_cb(display, (lv_display_flush_cb_t)my_disp_flush);
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-TARGET=RELEASE
+TARGET=DEBUG
 FILESYSTEM=vfat
 BS=1MiB
 COUNT=128
@@ -12,6 +12,7 @@ BUILDDEPS=1
 BUILDPKGS=1
 PICKDEPS=1
 PICKPKGS=1
+SECURE_BOOT=ENABLE
 
 if [ $BUILDDEPS -eq 1 ];then
     PICKDEPS=1
@@ -30,9 +31,9 @@ BuildDeps()
     build -p ShellPkg/ShellPkg.dsc -b ${TARGET}
     
     if [ "x${TARGET}" == "xDEBUG"];then
-        build -p OvmfPkg/OvmfPkgX64.dsc -b ${TARGET} -D DEBUG_ON_SERIAL_PORT
+        build -p OvmfPkg/OvmfPkgX64.dsc -b ${TARGET} -D DEBUG_ON_SERIAL_PORT -D SECURE_BOOT_${SECURE_BOOT}
     else
-        build -p OvmfPkg/OvmfPkgX64.dsc -b ${TARGET}
+        build -p OvmfPkg/OvmfPkgX64.dsc -b ${TARGET} -D SECURE_BOOT_${SECURE_BOOT}
     fi
 }
 

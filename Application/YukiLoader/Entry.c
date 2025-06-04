@@ -86,7 +86,7 @@ UefiMain (
 
   //return EFI_SUCCESS;  
 
-  LVGLInitScreen();
+  LVGLInitScreen(GraphicsOutput->Mode->Info->HorizontalResolution,GraphicsOutput->Mode->Info->VerticalResolution);
   //ShowMsgBox(wg,"Hello World!","Message");
   //ShowFS(wg);
   InitEfiFs();
