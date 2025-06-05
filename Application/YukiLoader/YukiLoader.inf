@@ -40,6 +40,8 @@
   Entry.c
   YukiLoaderStr.uni
   #windows/FS.c
+
+  windows/Loading/loading.c
   
 
 [Packages]

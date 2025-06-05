@@ -26,6 +26,7 @@
 #include <Protocol/AbsolutePointer.h>
 
 #include "libefifs/EFIFS.h"
+#include "Entry.h"
 //#include <stdlib.h>
 //#include <string.h>
 
@@ -89,8 +90,10 @@ UefiMain (
   LVGLInitScreen(GraphicsOutput->Mode->Info->HorizontalResolution,GraphicsOutput->Mode->Info->VerticalResolution);
   //ShowMsgBox(wg,"Hello World!","Message");
   //ShowFS(wg);
-  InitEfiFs();
-  Draw();
+  //InitEfiFs();
+
+  frmLoading_Init();
+  
   Evt_Exit();
   return EFI_SUCCESS;
 }
