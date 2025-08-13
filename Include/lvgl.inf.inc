@@ -26,7 +26,7 @@
   lvgl/src/draw/lv_draw_rect.c
   lvgl/src/draw/lv_draw_triangle.c
   lvgl/src/draw/lv_draw_vector.c
-  lvgl/src/misc/cache/lv_image_header_cache.c
+  lvgl/src/misc/cache/instance/lv_image_header_cache.c
   lvgl/src/draw/lv_image_decoder.c
   # lvgl/src/draw/lv_image_buf.c
   lvgl/src/draw/nxp/pxp/lv_draw_buf_pxp.c
@@ -65,7 +65,9 @@
   lvgl/src/draw/sw/blend/neon/lv_blend_neon.S
   lvgl/src/draw/sw/blend/lv_draw_sw_blend.c
   lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_argb8888.c
+  lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_argb8888_premultiplied.c
   lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb565.c
+  lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb565_swapped.c
   lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c
   lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_al88.c
   lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_i1.c
@@ -75,7 +77,7 @@
   lvgl/src/draw/sw/lv_draw_sw_border.c
   lvgl/src/draw/sw/lv_draw_sw_box_shadow.c
   lvgl/src/draw/sw/lv_draw_sw_fill.c
-  lvgl/src/draw/sw/lv_draw_sw_gradient.c
+  lvgl/src/draw/sw/lv_draw_sw_grad.c
   lvgl/src/draw/sw/lv_draw_sw_img.c
   lvgl/src/draw/sw/lv_draw_sw_letter.c
   lvgl/src/draw/sw/lv_draw_sw_line.c
@@ -84,6 +86,7 @@
   lvgl/src/draw/sw/lv_draw_sw_transform.c
   lvgl/src/draw/sw/lv_draw_sw_triangle.c
   lvgl/src/draw/sw/lv_draw_sw_vector.c
+  lvgl/src/draw/sw/lv_draw_sw_utils.c
   lvgl/src/draw/vg_lite/lv_draw_buf_vg_lite.c
   lvgl/src/draw/vg_lite/lv_draw_vg_lite.c
   lvgl/src/draw/vg_lite/lv_draw_vg_lite_arc.c
@@ -192,8 +195,8 @@
   lvgl/src/lv_init.c
   lvgl/src/misc/cache/lv_cache.c
   lvgl/src/misc/cache/lv_cache_entry.c
-  lvgl/src/misc/cache/lv_image_cache.c
-  lvgl/src/misc/cache/lv_cache_lru_rb.c
+  lvgl/src/misc/cache/instance/lv_image_cache.c
+  lvgl/src/misc/cache/class/lv_cache_lru_rb.c
   lvgl/src/misc/lv_anim.c
   lvgl/src/misc/lv_anim_timeline.c
   lvgl/src/misc/lv_area.c
@@ -217,6 +220,7 @@
   lvgl/src/misc/lv_text.c
   lvgl/src/misc/lv_text_ap.c
   lvgl/src/misc/lv_timer.c
+  lvgl/src/misc/lv_iter.c
   lvgl/src/misc/lv_utils.c
   lvgl/src/osal/lv_cmsis_rtos2.c
   lvgl/src/osal/lv_freertos.c
